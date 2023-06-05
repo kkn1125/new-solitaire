@@ -1,0 +1,170 @@
+@mixin card-parent {
+  position: relative;
+}
+
+@mixin card-style {
+  position: absolute;
+  background-color: #ffffff;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  #wrapper {
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: auto;
+    border: 1px solid #ccc;
+    padding: 2rem;
+    gap: 2rem;
+
+    #top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+
+      #pick-deck {
+        display: flex;
+        gap: 1rem;
+        #deck {
+          display: flex;
+          @include card-parent;
+        }
+        #pick {
+          display: flex;
+          @include card-parent;
+        }
+      }
+
+      #stack {
+        display: flex;
+        @include card-parent;
+      }
+    }
+
+    #body {
+      #ground {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        min-height: 300px;
+
+        .column {
+          @include card-parent;
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+
+    .back,
+    .card,
+    .empty {
+      overflow: hidden;
+      width: 5vw;
+      height: calc(5vw * 1.4);
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      -webkit-border-radius: 0.5rem;
+      -moz-border-radius: 0.5rem;
+      -ms-border-radius: 0.5rem;
+      -o-border-radius: 0.5rem;
+    }
+
+    .back,
+    .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      @include card-style;
+      z-index: 5;
+
+      &:not([data-card-open="false"]):hover {
+        box-shadow: 0 0 0 0.3rem #164fc926;
+      }
+
+      &:not([data-card-open="false"]).selected {
+        box-shadow: 0 0 0 0.3rem #164fc9a6;
+      }
+
+      & .card-top {
+        display: flex;
+        justify-content: space-around;
+      }
+      & .card-mid {
+        text-align: center;
+        font-size: 1.5rem;
+      }
+      & .card-bottom {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-around;
+      }
+    }
+
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+  }
+
+  [data-card-type="heart"],
+  [data-card-type="diamond"] {
+    color: red;
+  }
+
+  .back,
+  [data-card-open="false"] {
+    &::after {
+      position: absolute;
+      content: "";
+      background-color: #03142e !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0.25rem;
+      background: linear-gradient(
+        45deg,
+        #445875 0%,
+        #ffffff 0%,
+        #445875 10%,
+        #ffffff 10%,
+        #445875 20%,
+        #ffffff 20%,
+        #445875 30%,
+        #ffffff 30%,
+        #445875 40%,
+        #ffffff 40%,
+        #445875 50%,
+        #ffffff 50%,
+        #445875 60%,
+        #ffffff 60%,
+        #445875 70%,
+        #ffffff 70%,
+        #445875 80%,
+        #ffffff 80%,
+        #445875 90%,
+        #ffffff 90%,
+        #445875 100%,
+        #ffffff 100%
+      );
+
+      border-radius: 0.3rem;
+      -webkit-border-radius: 0.3rem;
+      -moz-border-radius: 0.3rem;
+      -ms-border-radius: 0.3rem;
+      -o-border-radius: 0.3rem;
+    }
+  }
+}
