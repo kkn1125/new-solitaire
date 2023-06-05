@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 \[x\]*
 .env*
+
+build/
+dist/
+out/

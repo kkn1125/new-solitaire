@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pages": "touch build/.nojekyll && cd build/ && git init && git add -A && git commit -m \"gh-pages\" && git push https://github.com/kkn1125/new-solitaire.git master:gh-pages -f"
   },
   "devDependencies": {
     "sass": "^1.62.1",
