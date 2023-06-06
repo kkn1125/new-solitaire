@@ -7,6 +7,12 @@
   background-color: #ffffff;
 }
 
+@mixin card-size {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 html,
 body {
   height: 100%;
@@ -27,6 +33,11 @@ body {
     padding: 2rem;
     gap: 2rem;
 
+    @media (max-width: 568px) {
+      padding: 0.5rem;
+      width: 90%;
+    }
+
     #top {
       display: flex;
       justify-content: space-between;
@@ -42,6 +53,7 @@ body {
         #pick {
           display: flex;
           @include card-parent;
+          min-width: 150px;
         }
       }
 
@@ -69,15 +81,30 @@ body {
     .back,
     .card,
     .empty {
+      font-size: calc(4vw * 0.25);
       overflow: hidden;
-      width: 5vw;
-      height: calc(5vw * 1.4);
+      width: calc(4vw + 1vh);
+      height: calc(4vw * 1.4 + 1vh);
       border: 1px solid #ccc;
       border-radius: 0.5rem;
       -webkit-border-radius: 0.5rem;
       -moz-border-radius: 0.5rem;
       -ms-border-radius: 0.5rem;
       -o-border-radius: 0.5rem;
+      @media (max-width: 568px) {
+        font-size: calc(4vw * 0.25);
+        overflow: hidden;
+        width: calc(6vw + 1vh);
+        height: calc(6vw * 1.4 + 1vh);
+      }
+
+      @include card-size;
+
+      transition: 150ms ease-in-out;
+      -webkit-transition: 150ms ease-in-out;
+      -moz-transition: 150ms ease-in-out;
+      -ms-transition: 150ms ease-in-out;
+      -o-transition: 150ms ease-in-out;
     }
 
     .back,
@@ -94,6 +121,19 @@ body {
 
       &:not([data-card-open="false"]).selected {
         box-shadow: 0 0 0 0.3rem #164fc9a6;
+        &:last-child::after {
+          content: "✅";
+          text-shadow: 3px 3px 3px #55555556;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          font-size: 1.5rem;
+          transform: translate(-50%, -50%);
+          -webkit-transform: translate(-50%, -50%);
+          -moz-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          -o-transform: translate(-50%, -50%);
+        }
       }
 
       & .card-top {
@@ -103,6 +143,9 @@ body {
       & .card-mid {
         text-align: center;
         font-size: 1.5rem;
+        @media (max-width: 568px) {
+          display: none;
+        }
       }
       & .card-bottom {
         display: flex;
@@ -133,32 +176,38 @@ body {
       left: 0;
       right: 0;
       bottom: 0;
-      margin: 0.25rem;
-      background: linear-gradient(
-        45deg,
-        #445875 0%,
-        #ffffff 0%,
-        #445875 10%,
-        #ffffff 10%,
-        #445875 20%,
-        #ffffff 20%,
-        #445875 30%,
-        #ffffff 30%,
-        #445875 40%,
-        #ffffff 40%,
-        #445875 50%,
-        #ffffff 50%,
-        #445875 60%,
-        #ffffff 60%,
-        #445875 70%,
-        #ffffff 70%,
-        #445875 80%,
-        #ffffff 80%,
-        #445875 90%,
-        #ffffff 90%,
-        #445875 100%,
-        #ffffff 100%
-      );
+      // margin: 0.25rem;
+      // background: linear-gradient(
+      //   45deg,
+      //   #445875 0%,
+      //   #ffffff 0%,
+      //   #445875 10%,
+      //   #ffffff 10%,
+      //   #445875 20%,
+      //   #ffffff 20%,
+      //   #445875 30%,
+      //   #ffffff 30%,
+      //   #445875 40%,
+      //   #ffffff 40%,
+      //   #445875 50%,
+      //   #ffffff 50%,
+      //   #445875 60%,
+      //   #ffffff 60%,
+      //   #445875 70%,
+      //   #ffffff 70%,
+      //   #445875 80%,
+      //   #ffffff 80%,
+      //   #445875 90%,
+      //   #ffffff 90%,
+      //   #445875 100%,
+      //   #ffffff 100%
+      // );
+      background-image: url("/public/cards/back_0.png");
+      @include card-size;
+
+      // @media (max-width: 568px) {
+      // margin: 0.1rem;
+      // }
 
       border-radius: 0.3rem;
       -webkit-border-radius: 0.3rem;

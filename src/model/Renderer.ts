@@ -1,4 +1,4 @@
-import { APP, CARD_ENV, GROUND } from "../util/global";
+import { APP, CARD_ENV, GROUND, PICK } from "../util/global";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
 
@@ -99,29 +99,69 @@ export default class Renderer {
             data-card-open="${card.isOpen}"
             data-card-number="${card.number}"
             data-card-type="${card.type}"
-            style="top: ${order * 22}px;">
-            <div class="card-top">
-              <span>
+            style="top: ${order * 22}px; background-image: url('${card.image}');">
+            <!--
+              <div class="card-top">
+                <span>
+                  ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
+                </span>
+                <span>
+                  ${CARD_ENV.TAG[card.number]}
+                </span>
+              </div>
+              <div class="card-mid">
                 ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-              </span>
-              <span>
-                ${CARD_ENV.TAG[card.number]}
-              </span>
-            </div>
-            <div class="card-mid">
-              ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-            </div>
-            <div class="card-bottom">
-              <span>
-                ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-              </span>
-              <span>
-                ${CARD_ENV.TAG[card.number]}
-              </span>
-            </div>
+              </div>
+              <div class="card-bottom">
+                <span>
+                  ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
+                </span>
+                <span>
+                  ${CARD_ENV.TAG[card.number]}
+                </span>
+              </div>
+            -->
           </div>`
         )
         .join("");
+    });
+  }
+
+  pick() {
+    const picks = this.solitaire.getCardInPicks().reverse().slice(-3);
+    PICK().innerHTML = `<div class="empty"></div>`;
+    return picks.forEach((pick, order) => {
+      PICK().innerHTML += `
+        <div
+        class="card${pick.selected ? " selected" : ""}"
+        data-card-column="${pick.column}"
+        data-card-open="${pick.isOpen}"
+        data-card-number="${pick.number}"
+        data-card-type="${pick.type}"
+        style="left: ${order * 22}px; background-image: url('${pick.image}');">
+        <!--
+          <div class="card-top">
+            <span>
+              ${CARD_ENV.SHAPE[pick.type as OnlyUsableCard]}
+            </span>
+            <span>
+              ${CARD_ENV.TAG[pick.number]}
+            </span>
+          </div>
+          <div class="card-mid">
+            ${CARD_ENV.SHAPE[pick.type as OnlyUsableCard]}
+          </div>
+          <div class="card-bottom">
+            <span>
+              ${CARD_ENV.SHAPE[pick.type as OnlyUsableCard]}
+            </span>
+            <span>
+              ${CARD_ENV.TAG[pick.number]}
+            </span>
+          </div>
+        -->
+        </div>
+      `;
     });
   }
 
@@ -132,5 +172,6 @@ export default class Renderer {
 
   update() {
     this.ground();
+    this.pick();
   }
 }

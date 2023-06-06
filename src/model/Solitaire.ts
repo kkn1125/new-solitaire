@@ -1,6 +1,5 @@
 import { CARD_ENV } from "../util/global";
 import Card from "./Card";
-import EventManager from "./EventManager";
 
 export default class Solitaire {
   selector: [Card[] | null, Card | null] = [null, null];
@@ -78,6 +77,10 @@ export default class Solitaire {
     return this.asList().filter((card) => card.state === "stack");
   }
 
+  getCardInPicks() {
+    return this.asList().filter((card) => card.state === "pick");
+  }
+
   compareWith(first: Card, second: Card) {
     return (
       this.isStackableColorType(first, second) &&
@@ -109,5 +112,10 @@ export default class Solitaire {
     return this.ground[card.column].findIndex(
       (c) => c.type === card.type && c.number === card.number
     );
+  }
+
+  clearSelector() {
+    this.selector[0] = null;
+    this.selector[1] = null;
   }
 }

@@ -10,6 +10,8 @@
     "pages": "touch build/.nojekyll && cd build/ && git init && git add -A && git commit -m \"gh-pages\" && git push https://github.com/kkn1125/new-solitaire.git master:gh-pages -f"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.1.4",
     "sass": "^1.62.1",
     "typescript": "^5.0.2",
     "vite": "^4.3.9"

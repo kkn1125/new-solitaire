@@ -14,7 +14,7 @@ export const CARD_ENV: {
     clover: "♣",
   },
   TAG: {
-    "1": 'A',
+    "1": "A",
     "2": 2,
     "3": 3,
     "4": 4,
@@ -36,3 +36,7 @@ export const GROUND = () => document.querySelector("#ground") as HTMLDivElement;
 export const STACK = () => document.querySelector("#stack") as HTMLDivElement;
 export const PICK = () => document.querySelector("#pick") as HTMLDivElement;
 export const DECK = () => document.querySelector("#deck") as HTMLDivElement;
+
+/* images */
+export const IMAGE = (filename: string, number: number) =>
+  `/public/cards/${filename}_${number}.png`;
