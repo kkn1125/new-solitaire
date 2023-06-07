@@ -99,13 +99,21 @@ export default class Solitaire {
   moveToColumn(cards: Card[], column: number) {
     const startCard = cards[0];
     const startColumn = startCard.column;
-    const startIndex = this.findOrderInColumn(startCard);
-    const slice = this.ground[startColumn].splice(startIndex);
-    this.ground[column].push(...slice.map((card) => card.updateColumn(column)));
-    if (this.ground[startColumn].slice(-1)[0]) {
-      this.ground[startColumn].slice(-1)[0].isOpen = true;
+    if (startCard.state === "ground") {
+      const startIndex = this.findOrderInColumn(startCard);
+      const slice = this.ground[startColumn].splice(startIndex);
+      this.ground[column].push(
+        ...slice.map((card) => card.updateColumn(column))
+      );
+      if (this.ground[startColumn].slice(-1)[0]) {
+        this.ground[startColumn].slice(-1)[0].isOpen = true;
+      }
+      console.log(this.ground[startColumn]);
+    } else if (startCard.state === "pick") {
+      startCard.updateColumn(column);
+      startCard.updateState("ground");
+      this.ground[column].push(startCard);
     }
-    console.log(this.ground[startColumn]);
   }
 
   findOrderInColumn(card: Card) {

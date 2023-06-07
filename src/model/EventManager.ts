@@ -30,9 +30,11 @@ export default class EventManager {
 
       if (cosestDeck) {
         const deckCards = this.solitaire.getCardInDecks();
-        const pickCard = deckCards.splice(-1)[0];
-        pickCard.updateState("pick");
-        pickCard.open();
+        if (deckCards.length > 0) {
+          const pickCard = deckCards.splice(-1)[0];
+          pickCard.updateState("pick");
+          pickCard.open();
+        }
 
         // console.log(deckCards[deckCards.length-1]);
         // console.log(deckCards.splice(-1));
@@ -86,22 +88,29 @@ export default class EventManager {
           if (card.selected) {
             card.selected = false;
           } else {
-            card.selected = true;
+            // card.selected = true;
 
             if (selector[0] === null) {
+              const state = cardEl.dataset.cardState;
               const column = (cardEl as unknown as HTMLDivElement).parentNode;
-              const childrens = Array.from((column as HTMLDivElement).children)
-                .filter((child) => child.classList.contains("card"))
-                .map(this.convertElToCard.bind(this)) as Card[];
+              const lastItem = Array.from(column.children).slice(-1)[0];
+              if (state === "pick" && lastItem === cardEl) {
+                card.selected = true;
+                selector[0] = [card];
+              } else if (state === "ground") {
+                const childrens = Array.from(column.children)
+                  .filter((child) => child.classList.contains("card"))
+                  .map(this.convertElToCard.bind(this)) as Card[];
 
-              const index = childrens.findIndex(
-                (c) => c.type === card.type && c.number === card.number
-              );
+                const index = childrens.findIndex(
+                  (c) => c.type === card.type && c.number === card.number
+                );
 
-              if (index > -1) {
-                const slice = childrens.slice(index);
-                slice.forEach((item) => (item.selected = true));
-                selector[0] = slice;
+                if (index > -1) {
+                  const slice = childrens.slice(index);
+                  slice.forEach((item) => (item.selected = true));
+                  selector[0] = slice;
+                }
               }
             } else {
               if (selector[1] === null) {

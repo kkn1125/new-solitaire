@@ -99,7 +99,10 @@ export default class Renderer {
             data-card-open="${card.isOpen}"
             data-card-number="${card.number}"
             data-card-type="${card.type}"
-            style="top: ${order * 22}px; background-image: url('${card.image}');">
+            data-card-state="${card.state}"
+            style="top: ${order * 22}px; background-image: url('${
+              card.image
+            }');">
             <!--
               <div class="card-top">
                 <span>
@@ -138,6 +141,7 @@ export default class Renderer {
         data-card-open="${pick.isOpen}"
         data-card-number="${pick.number}"
         data-card-type="${pick.type}"
+        data-card-state="${pick.state}"
         style="left: ${order * 22}px; background-image: url('${pick.image}');">
         <!--
           <div class="card-top">
