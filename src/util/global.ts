@@ -39,4 +39,4 @@ export const DECK = () => document.querySelector("#deck") as HTMLDivElement;
 
 /* images */
 export const IMAGE = (filename: string, number: number) =>
-  `/public/cards/${filename}_${number}.png`;
+  `/cards/${filename}_${number}.png`;
