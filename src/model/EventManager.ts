@@ -32,6 +32,7 @@ export default class EventManager {
         const deckCards = this.solitaire.getCardInDecks();
         if (deckCards.length > 0) {
           const pickCard = deckCards.splice(-1)[0];
+
           pickCard.updateState("pick");
           pickCard.open();
         }
@@ -39,9 +40,9 @@ export default class EventManager {
         // console.log(deckCards[deckCards.length-1]);
         // console.log(deckCards.splice(-1));
         // console.log(deckCards[deckCards.length-1]);
+        this.renderer.update();
       }
     }
-    this.renderer.update();
   }
 
   handleSelectCard(e: MouseEvent) {
@@ -88,13 +89,26 @@ export default class EventManager {
           if (card.selected) {
             card.selected = false;
           } else {
-            // card.selected = true;
+            card.selected = true;
 
             if (selector[0] === null) {
               const state = cardEl.dataset.cardState;
               const column = (cardEl as unknown as HTMLDivElement).parentNode;
               const lastItem = Array.from(column.children).slice(-1)[0];
-              if (state === "pick" && lastItem === cardEl) {
+              if (
+                (state === "ground" || state === "pick" || state === "stack") &&
+                lastItem === cardEl
+              ) {
+                if (this.solitaire.isStackDirectly(card)) {
+                  console.log(1);
+
+                  this.solitaire.clearSelector();
+                  card.selected = false;
+                  cardEl.classList.remove("selected");
+                  this.renderer.update();
+                  return;
+                }
+
                 card.selected = true;
                 selector[0] = [card];
               } else if (state === "ground") {
@@ -113,6 +127,8 @@ export default class EventManager {
                 }
               }
             } else {
+              console.log(selector[0]);
+              console.log(selector[1]);
               if (selector[1] === null) {
                 selector[1] = card;
 
@@ -134,10 +150,11 @@ export default class EventManager {
             }
           }
         }
+        this.renderer.update();
       } else {
         this.solitaire.clearSelector();
+        this.renderer.update();
       }
     }
-    this.renderer.update();
   }
 }

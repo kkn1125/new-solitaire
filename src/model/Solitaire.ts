@@ -14,6 +14,15 @@ export default class Solitaire {
   empty: Card = new Card("empty", 0);
   back: Card = new Card("back", 0);
 
+  stack: {
+    [k in OnlyUsableCard]: Card[];
+  } = {
+    heart: [],
+    diamond: [],
+    spade: [],
+    clover: [],
+  };
+
   ground: Card[][] = [[], [], [], [], [], [], []];
 
   constructor() {
@@ -96,23 +105,98 @@ export default class Solitaire {
     return first.number + 1 === second.number;
   }
 
+  isStackDirectly(card: Card) {
+    const typeOfStack = this.stack[card.type as OnlyUsableCard];
+    const typeOfStackLastCard = typeOfStack.slice(-1)[0];
+    const currentColumn = card.column;
+    console.log(card.state);
+    if (card.state === "pick") {
+      const picks = this.getCardInPicks();
+      const lastCardIndex = picks.findIndex(
+        (pick) => pick.number === card.number && pick.type === card.type
+      );
+      if (lastCardIndex > -1) {
+        if (
+          (typeOfStack.length === 0 && card.number === 1) ||
+          (typeOfStackLastCard &&
+            typeOfStackLastCard.number + 1 === card.number)
+        ) {
+          const found = picks.splice(lastCardIndex)[0];
+          console.log(card, found);
+          this.moveToStack(card);
+          // this.moveToGround(card, found.column);
+          return true;
+        }
+      }
+    } else if (this.ground[currentColumn] && card.state !== "stack") {
+      const cardIndex = this.ground[currentColumn].findIndex(
+        (item) => item.number === card.number && item.type === card.type
+      );
+      if (cardIndex > -1) {
+        if (
+          (typeOfStack.length === 0 && card.number === 1) ||
+          (typeOfStackLastCard &&
+            typeOfStackLastCard.number + 1 === card.number)
+        ) {
+          const pickCard = this.ground[currentColumn].splice(cardIndex)[0];
+          console.log(pickCard);
+          console.log(typeOfStack);
+          console.log(typeOfStackLastCard);
+          this.afterCardOpen(currentColumn);
+          this.moveToStack(pickCard);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  moveToGround(card: Card, column: number) {
+    card.updateColumn(column);
+    card.updateState("ground");
+  }
+
+  moveToStack(card: Card) {
+    card.updateColumn(-1);
+    card.updateState("stack");
+    this.stack[card.type as OnlyUsableCard].push(card);
+  }
+
   moveToColumn(cards: Card[], column: number) {
     const startCard = cards[0];
     const startColumn = startCard.column;
-    if (startCard.state === "ground") {
+    if (startCard.state === "stack") {
+      const cardIndex = this.stack[startCard.type as OnlyUsableCard].findIndex(
+        (stack) =>
+          stack.number === startCard.number && stack.type === startCard.type
+      );
+      if (cardIndex > -1) {
+        const slice =
+          this.stack[startCard.type as OnlyUsableCard].splice(cardIndex);
+        this.ground[column].push(...slice);
+        this.afterCardOpen(column);
+        startCard.updateColumn(column);
+        startCard.updateState("ground");
+      }
+    } else if (startCard.state === "ground") {
       const startIndex = this.findOrderInColumn(startCard);
       const slice = this.ground[startColumn].splice(startIndex);
       this.ground[column].push(
         ...slice.map((card) => card.updateColumn(column))
       );
-      if (this.ground[startColumn].slice(-1)[0]) {
-        this.ground[startColumn].slice(-1)[0].isOpen = true;
-      }
-      console.log(this.ground[startColumn]);
+      this.afterCardOpen(startColumn);
+      startCard.updateColumn(column);
+      startCard.updateState("ground");
     } else if (startCard.state === "pick") {
       startCard.updateColumn(column);
       startCard.updateState("ground");
       this.ground[column].push(startCard);
+    }
+  }
+
+  afterCardOpen(column: number) {
+    if (this.ground[column].slice(-1)[0]) {
+      this.ground[column].slice(-1)[0].isOpen = true;
     }
   }
 

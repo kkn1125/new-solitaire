@@ -60,6 +60,12 @@ body {
       #stack {
         display: flex;
         @include card-parent;
+        #diamond-stack,
+        #heart-stack,
+        #spade-stack,
+        #clover-stack {
+          position: relative;
+        }
       }
     }
 
