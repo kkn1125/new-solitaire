@@ -36,7 +36,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         
       },
     },
-    base: "",
+    base: "/new-solitaire",
     build: {
       outDir: "build",
       minify: true,
