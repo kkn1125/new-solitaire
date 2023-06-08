@@ -39,4 +39,6 @@ export const DECK = () => document.querySelector("#deck") as HTMLDivElement;
 
 /* images */
 export const IMAGE = (filename: string, number: number) =>
-  `/cards/${filename}_${number}.png`;
+  `${
+    import.meta.env.DEV ? "" : "/new-solitaire"
+  }/cards/${filename}_${number}.png`;

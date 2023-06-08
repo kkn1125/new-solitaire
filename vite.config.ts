@@ -38,6 +38,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
     build: {
       outDir: "build",
       minify: true,
+      cssMinify: true,
     },
   };
 });
