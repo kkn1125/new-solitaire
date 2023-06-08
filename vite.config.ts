@@ -32,9 +32,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
           },
         },
       },
-      watch: {
-        
-      },
+      watch: {},
     },
     base: "/new-solitaire",
     build: {
