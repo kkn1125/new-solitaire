@@ -81,7 +81,9 @@ export default class Renderer {
 
         </div>
 
+
       </div>
+      <button id="restart">Solitaire!</button>
     `;
   }
 

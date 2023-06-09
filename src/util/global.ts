@@ -36,6 +36,7 @@ export const GROUND = () => document.querySelector("#ground") as HTMLDivElement;
 export const STACK = () => document.querySelector("#stack") as HTMLDivElement;
 export const PICK = () => document.querySelector("#pick") as HTMLDivElement;
 export const DECK = () => document.querySelector("#deck") as HTMLDivElement;
+export const RESTART = () => document.querySelector("#restart") as HTMLDivElement;
 
 /* images */
 export const IMAGE = (filename: string, number: number) =>

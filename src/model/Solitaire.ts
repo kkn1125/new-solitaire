@@ -29,10 +29,31 @@ export default class Solitaire {
 
   constructor() {
     this.#initDeck();
-    // this.#shuffleDeck();
     this.#deckToGround();
-    console.log(this.deck);
-    console.log(this.ground);
+    // console.log(this.deck);
+    // console.log(this.ground);
+  }
+
+  regame() {
+    this.selector = [null, null];
+    this.deck = {
+      heart: [],
+      diamond: [],
+      spade: [],
+      clover: [],
+    };
+    this.empty = new Card("empty", 0);
+    this.back = new Card("back", 0);
+    this.pick = [];
+    this.stack = {
+      heart: [],
+      diamond: [],
+      spade: [],
+      clover: [],
+    };
+    this.ground = [[], [], [], [], [], [], []];
+    this.#initDeck();
+    this.#deckToGround();
   }
 
   #initDeck() {
@@ -42,90 +63,6 @@ export default class Solitaire {
         this.deck[type].push(card);
       }
     }
-  }
-
-  #shuffleDeck() {
-    // const temp: {
-    //   heart: Card[];
-    //   diamond: Card[];
-    //   spade: Card[];
-    //   clover: Card[];
-    // } = {
-    //   heart: [],
-    //   diamond: [],
-    //   spade: [],
-    //   clover: [],
-    // };
-
-    console.log("[SYS] Shuffle start All decks");
-
-    this.deck.heart = this.deck.heart
-      .sort(
-        (a, b) =>
-          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
-      )
-      .map((card) => {
-        const copyCard = new Card(card.type, card.number);
-        copyCard.column = -1;
-        copyCard.image = card.image;
-        copyCard.isOpen = card.isOpen;
-        copyCard.state = card.state;
-        copyCard.color = card.color;
-        return copyCard;
-      });
-    this.deck.diamond = this.deck.diamond
-      .sort(
-        (a, b) =>
-          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
-      )
-      .map((card) => {
-        const copyCard = new Card(card.type, card.number);
-        copyCard.column = -1;
-        copyCard.image = card.image;
-        copyCard.isOpen = card.isOpen;
-        copyCard.state = card.state;
-        copyCard.color = card.color;
-        return copyCard;
-      });
-    this.deck.spade = this.deck.spade
-      .sort(
-        (a, b) =>
-          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
-      )
-      .map((card) => {
-        const copyCard = new Card(card.type, card.number);
-        copyCard.column = -1;
-        copyCard.image = card.image;
-        copyCard.isOpen = card.isOpen;
-        copyCard.state = card.state;
-        copyCard.color = card.color;
-        return copyCard;
-      });
-    this.deck.clover = this.deck.clover
-      .sort(
-        (a, b) =>
-          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
-      )
-      .map((card) => {
-        const copyCard = new Card(card.type, card.number);
-        copyCard.column = -1;
-        copyCard.image = card.image;
-        copyCard.isOpen = card.isOpen;
-        copyCard.state = card.state;
-        copyCard.color = card.color;
-        return copyCard;
-      });
-
-    console.log("[SYS] Shuffle done All decks");
-
-    // Object.assign(this.deck, Object.assign({}, temp));
-
-    // for (let card of this.deck.diamond) {
-    // }
-    // for (let card of this.deck.spade) {
-    // }
-    // for (let card of this.deck.clover) {
-    // }
   }
 
   #deckToGround() {
@@ -196,7 +133,6 @@ export default class Solitaire {
     const typeOfStack = this.stack[card.type as OnlyUsableCard];
     const typeOfStackLastCard = typeOfStack.slice(-1)[0];
     const currentColumn = card.column;
-    console.log(card.state);
     if (card.state === "pick") {
       const picks = this.pick;
       const lastCardIndex = picks.findIndex(
@@ -209,9 +145,7 @@ export default class Solitaire {
             typeOfStackLastCard.number + 1 === card.number)
         ) {
           const found = picks.splice(lastCardIndex)[0];
-          console.log(card, found);
           this.moveToStack(card);
-          // this.moveToGround(card, found.column);
           return true;
         }
       }
@@ -226,9 +160,6 @@ export default class Solitaire {
             typeOfStackLastCard.number + 1 === card.number)
         ) {
           const pickCard = this.ground[currentColumn].splice(cardIndex)[0];
-          console.log(pickCard);
-          console.log(typeOfStack);
-          console.log(typeOfStackLastCard);
           this.afterCardOpen(currentColumn);
           this.moveToStack(pickCard);
           return true;

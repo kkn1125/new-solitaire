@@ -20,6 +20,42 @@ body {
 }
 
 body {
+  position: relative;
+
+  #restart {
+    &:hover,
+    &:focus-within {
+      box-shadow: 0 0 0 0.3rem #348389a6;
+    }
+    &:active {
+      filter: brightness(0.85);
+      -webkit-filter: brightness(0.85);
+    }
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    background-color: #348389;
+    border: none;
+    border-radius: 0.3rem;
+    -webkit-border-radius: 0.3rem;
+    -moz-border-radius: 0.3rem;
+    -ms-border-radius: 0.3rem;
+    -o-border-radius: 0.3rem;
+    transition: 150ms ease-in-out;
+    -webkit-transition: 150ms ease-in-out;
+    -moz-transition: 150ms ease-in-out;
+    -ms-transition: 150ms ease-in-out;
+    -o-transition: 150ms ease-in-out;
+  }
+
   background-color: #121212;
   #wrapper {
     background-color: #565656;

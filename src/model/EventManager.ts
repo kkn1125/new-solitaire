@@ -1,3 +1,4 @@
+import { RESTART } from "../util/global";
 import Card from "./Card";
 import Renderer from "./Renderer";
 import Solitaire from "./Solitaire";
@@ -15,6 +16,21 @@ export default class EventManager {
   #initListeners() {
     window.addEventListener("click", this.handleSelectCard.bind(this));
     window.addEventListener("click", this.handleDeckToPick.bind(this));
+    window.addEventListener("click", this.handleRestartGame.bind(this));
+  }
+
+  removeAllListeners() {
+    window.removeEventListener("click", this.handleSelectCard.bind(this));
+    window.removeEventListener("click", this.handleDeckToPick.bind(this));
+    window.removeEventListener("click", this.handleRestartGame.bind(this));
+  }
+
+  handleRestartGame(e: MouseEvent) {
+    const target = e.target as HTMLButtonElement;
+    if (target.id === "restart") {
+      this.solitaire.regame();
+      this.renderer.render();
+    }
   }
 
   convertElToCard(child: HTMLElement) {
@@ -39,10 +55,6 @@ export default class EventManager {
           pickCard.open();
           this.solitaire.pick.push(pickCard);
         }
-
-        // console.log(deckCards[deckCards.length-1]);
-        // console.log(deckCards.splice(-1));
-        // console.log(deckCards[deckCards.length-1]);
         this.renderer.update();
       }
     }
@@ -107,7 +119,7 @@ export default class EventManager {
                 lastItem === cardEl
               ) {
                 if (this.solitaire.isStackDirectly(card)) {
-                  console.log(1);
+                  // console.log(1);
 
                   this.solitaire.clearSelector();
                   card.selected = false;
@@ -116,7 +128,7 @@ export default class EventManager {
                   return;
                 }
 
-                console.log("[SYS] Selected Card", card);
+                // console.log("[SYS] Selected Card", card);
                 card.selected = true;
                 selector[0] = [card];
               } else if (state === "ground") {
@@ -135,8 +147,8 @@ export default class EventManager {
                 }
               }
             } else {
-              console.log(selector[0]);
-              console.log(selector[1]);
+              // console.log(selector[0]);
+              // console.log(selector[1]);
               if (selector[1] === null) {
                 selector[1] = card;
 
