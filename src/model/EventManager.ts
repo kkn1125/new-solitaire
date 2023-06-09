@@ -18,9 +18,9 @@ export default class EventManager {
   }
 
   convertElToCard(child: HTMLElement) {
-    return this.solitaire.deck[child.dataset.cardType as OnlyUsableCard][
-      Number(child.dataset.cardNumber) - 1
-    ] as Card;
+    return this.solitaire.deck[child.dataset.cardType as OnlyUsableCard].find(
+      (card) => card.number === Number(child.dataset.cardNumber)
+    ) as Card;
   }
 
   handleDeckToPick(e: MouseEvent) {
@@ -31,10 +31,13 @@ export default class EventManager {
       if (cosestDeck) {
         const deckCards = this.solitaire.getCardInDecks();
         if (deckCards.length > 0) {
-          const pickCard = deckCards.splice(-1)[0];
+          const pickCard = deckCards.splice(
+            Math.floor(Math.random() * deckCards.length)
+          )[0];
 
           pickCard.updateState("pick");
           pickCard.open();
+          this.solitaire.pick.push(pickCard);
         }
 
         // console.log(deckCards[deckCards.length-1]);
@@ -51,7 +54,9 @@ export default class EventManager {
     document.querySelectorAll(".card").forEach((cardEl: any) => {
       const type = cardEl.dataset.cardType as OnlyUsableCard;
       const number = Number(cardEl.dataset.cardNumber) as number;
-      const card = this.solitaire.deck[type][number - 1] as Card;
+      const card = this.solitaire.deck[type].find(
+        (card) => card.number === number
+      ) as Card;
       if (card) {
         card.selected = false;
         cardEl.classList.remove("selected");
@@ -83,13 +88,15 @@ export default class EventManager {
         const cardEl = target.closest(".card") as HTMLDivElement;
         const type = cardEl.dataset.cardType as OnlyUsableCard;
         const number = Number(cardEl.dataset.cardNumber) as number;
-        const card = this.solitaire.deck[type][number - 1] as Card;
-
+        const card = this.solitaire.deck[type].find(
+          (card) => card.number === number
+        ) as Card;
         if (cardEl.dataset.cardOpen === "true") {
           if (card.selected) {
             card.selected = false;
           } else {
-            card.selected = true;
+            // console.log(cardEl, card);
+            // card.selected = true;
 
             if (selector[0] === null) {
               const state = cardEl.dataset.cardState;
@@ -109,6 +116,7 @@ export default class EventManager {
                   return;
                 }
 
+                console.log("[SYS] Selected Card", card);
                 card.selected = true;
                 selector[0] = [card];
               } else if (state === "ground") {

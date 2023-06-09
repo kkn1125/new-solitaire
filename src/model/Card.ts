@@ -23,6 +23,7 @@ export default class Card {
   #initImage() {
     this.image = IMAGE(this.type, this.number);
   }
+  
   #initColor() {
     switch (this.type) {
       case "back":

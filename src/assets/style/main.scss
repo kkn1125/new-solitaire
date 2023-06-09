@@ -20,14 +20,16 @@ body {
 }
 
 body {
+  background-color: #121212;
   #wrapper {
+    background-color: #565656;
     user-select: none;
     position: absolute;
     top: 50%;
     left: 50%;
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 50%;
     margin: auto;
     border: 1px solid #ccc;
     padding: 2rem;
@@ -47,13 +49,56 @@ body {
         display: flex;
         gap: 1rem;
         #deck {
+          position: relative;
           display: flex;
           @include card-parent;
+
+          & .back.zero {
+            &::before {
+              content: "EMPTY";
+              position: absolute;
+              font-weight: 700;
+              color: white;
+              top: 50%;
+              left: 50%;
+              z-index: 5;
+              transform: translate(-50%, -50%);
+              -webkit-transform: translate(-50%, -50%);
+              -moz-transform: translate(-50%, -50%);
+              -ms-transform: translate(-50%, -50%);
+              -o-transform: translate(-50%, -50%);
+            }
+            filter: brightness(0.85);
+            -webkit-filter: brightness(0.85);
+            //border: 5px dashed #000000;
+            transform: rotate(-15deg);
+            -webkit-transform: rotate(-15deg);
+            -moz-transform: rotate(-15deg);
+            -ms-transform: rotate(-15deg);
+            -o-transform: rotate(-15deg);
+          }
         }
         #pick {
           display: flex;
           @include card-parent;
           min-width: 150px;
+
+          .card:last-child:hover {
+            box-shadow: 0 0 0 0.3rem #164fc926;
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            -o-transform: scale(1.1);
+          }
+          .card:not(:last-child):hover {
+            box-shadow: unset;
+            transform: unset;
+            -webkit-transform: unset;
+            -moz-transform: unset;
+            -ms-transform: unset;
+            -o-transform: unset;
+          }
         }
       }
 
@@ -123,6 +168,11 @@ body {
 
       &:not([data-card-open="false"]):hover {
         box-shadow: 0 0 0 0.3rem #164fc926;
+        transform: scale(1.1);
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        -o-transform: scale(1.1);
       }
 
       &:not([data-card-open="false"]).selected {
@@ -140,6 +190,11 @@ body {
           -ms-transform: translate(-50%, -50%);
           -o-transform: translate(-50%, -50%);
         }
+        transform: scale(1.1);
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        -o-transform: scale(1.1);
       }
 
       & .card-top {

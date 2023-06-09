@@ -1,4 +1,4 @@
-import { APP, CARD_ENV, GROUND, PICK, STACK } from "../util/global";
+import { APP, CARD_ENV, DECK, GROUND, PICK, STACK } from "../util/global";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
 
@@ -116,7 +116,7 @@ export default class Renderer {
   }
 
   pick() {
-    const picks = this.solitaire.getCardInPicks().reverse().slice(-3);
+    const picks = this.solitaire.pick.slice(-3);
     PICK().innerHTML = `<div class="empty"></div>`;
     return picks.forEach((pick, order) => {
       PICK().innerHTML += this.pickCardForm(pick, order);
@@ -132,6 +132,13 @@ export default class Renderer {
     this.ground();
     this.pick();
     this.stack();
+    this.isEmptyDeck();
+  }
+
+  isEmptyDeck() {
+    if (this.solitaire.getCardInDecks().length === 0) {
+      DECK().querySelector(".back").classList.add("zero");
+    }
   }
 
   stackCardForm(card: Card, order: number) {

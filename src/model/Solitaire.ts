@@ -14,6 +14,8 @@ export default class Solitaire {
   empty: Card = new Card("empty", 0);
   back: Card = new Card("back", 0);
 
+  pick: Card[] = [];
+
   stack: {
     [k in OnlyUsableCard]: Card[];
   } = {
@@ -27,7 +29,8 @@ export default class Solitaire {
 
   constructor() {
     this.#initDeck();
-    this.#shuffleDeck();
+    // this.#shuffleDeck();
+    this.#deckToGround();
     console.log(this.deck);
     console.log(this.ground);
   }
@@ -42,6 +45,90 @@ export default class Solitaire {
   }
 
   #shuffleDeck() {
+    // const temp: {
+    //   heart: Card[];
+    //   diamond: Card[];
+    //   spade: Card[];
+    //   clover: Card[];
+    // } = {
+    //   heart: [],
+    //   diamond: [],
+    //   spade: [],
+    //   clover: [],
+    // };
+
+    console.log("[SYS] Shuffle start All decks");
+
+    this.deck.heart = this.deck.heart
+      .sort(
+        (a, b) =>
+          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
+      )
+      .map((card) => {
+        const copyCard = new Card(card.type, card.number);
+        copyCard.column = -1;
+        copyCard.image = card.image;
+        copyCard.isOpen = card.isOpen;
+        copyCard.state = card.state;
+        copyCard.color = card.color;
+        return copyCard;
+      });
+    this.deck.diamond = this.deck.diamond
+      .sort(
+        (a, b) =>
+          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
+      )
+      .map((card) => {
+        const copyCard = new Card(card.type, card.number);
+        copyCard.column = -1;
+        copyCard.image = card.image;
+        copyCard.isOpen = card.isOpen;
+        copyCard.state = card.state;
+        copyCard.color = card.color;
+        return copyCard;
+      });
+    this.deck.spade = this.deck.spade
+      .sort(
+        (a, b) =>
+          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
+      )
+      .map((card) => {
+        const copyCard = new Card(card.type, card.number);
+        copyCard.column = -1;
+        copyCard.image = card.image;
+        copyCard.isOpen = card.isOpen;
+        copyCard.state = card.state;
+        copyCard.color = card.color;
+        return copyCard;
+      });
+    this.deck.clover = this.deck.clover
+      .sort(
+        (a, b) =>
+          Math.floor(Math.random() * 20) - Math.floor(Math.random() * 20)
+      )
+      .map((card) => {
+        const copyCard = new Card(card.type, card.number);
+        copyCard.column = -1;
+        copyCard.image = card.image;
+        copyCard.isOpen = card.isOpen;
+        copyCard.state = card.state;
+        copyCard.color = card.color;
+        return copyCard;
+      });
+
+    console.log("[SYS] Shuffle done All decks");
+
+    // Object.assign(this.deck, Object.assign({}, temp));
+
+    // for (let card of this.deck.diamond) {
+    // }
+    // for (let card of this.deck.spade) {
+    // }
+    // for (let card of this.deck.clover) {
+    // }
+  }
+
+  #deckToGround() {
     for (let i = 0; i < 28; i++) {
       const randomType = Math.floor(Math.random() * CARD_ENV.TYPES.length);
       const randomNumber = Math.floor(Math.random() * CARD_ENV.AMOUNT);
@@ -111,7 +198,7 @@ export default class Solitaire {
     const currentColumn = card.column;
     console.log(card.state);
     if (card.state === "pick") {
-      const picks = this.getCardInPicks();
+      const picks = this.pick;
       const lastCardIndex = picks.findIndex(
         (pick) => pick.number === card.number && pick.type === card.type
       );
@@ -175,8 +262,9 @@ export default class Solitaire {
           this.stack[startCard.type as OnlyUsableCard].splice(cardIndex);
         this.ground[column].push(...slice);
         this.afterCardOpen(column);
-        startCard.updateColumn(column);
-        startCard.updateState("ground");
+        this.moveToGround(startCard, column);
+        // startCard.updateColumn(column);
+        // startCard.updateState("ground");
       }
     } else if (startCard.state === "ground") {
       const startIndex = this.findOrderInColumn(startCard);
@@ -185,12 +273,19 @@ export default class Solitaire {
         ...slice.map((card) => card.updateColumn(column))
       );
       this.afterCardOpen(startColumn);
-      startCard.updateColumn(column);
-      startCard.updateState("ground");
+      this.moveToGround(startCard, column);
+      // startCard.updateColumn(column);
+      // startCard.updateState("ground");
     } else if (startCard.state === "pick") {
-      startCard.updateColumn(column);
-      startCard.updateState("ground");
-      this.ground[column].push(startCard);
+      const startIndex = this.findOrderInPickList(startCard);
+      const slice = this.pick.splice(startIndex);
+      this.ground[column].push(
+        ...slice.map((card) => card.updateColumn(column))
+      );
+      this.moveToGround(startCard, column);
+      // startCard.updateColumn(column);
+      // startCard.updateState("ground");
+      // this.ground[column].push(startCard);
     }
   }
 
@@ -202,6 +297,12 @@ export default class Solitaire {
 
   findOrderInColumn(card: Card) {
     return this.ground[card.column].findIndex(
+      (c) => c.type === card.type && c.number === card.number
+    );
+  }
+
+  findOrderInPickList(card: Card) {
+    return this.pick.findIndex(
       (c) => c.type === card.type && c.number === card.number
     );
   }
