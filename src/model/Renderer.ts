@@ -2,6 +2,32 @@ import { APP, CARD_ENV, DECK, GROUND, PICK, STACK } from "../util/global";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
 
+const useImage = () => false || innerWidth > 768;
+
+const cardImages = (card: Card) =>
+  useImage() ? `background-image: url('${card.image}');` : "";
+const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
+  <div class="card-top">
+    <span>
+      ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
+    </span>
+    <span>
+      ${CARD_ENV.TAG[card.number]}
+    </span>
+  </div>
+  <div class="card-mid">
+    ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
+  </div>
+  <div class="card-bottom">
+    <span>
+      ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
+    </span>
+    <span>
+      ${CARD_ENV.TAG[card.number]}
+    </span>
+  </div>
+  ${useImage() ? "-->" : ""}`;
+
 export default class Renderer {
   solitaire: Solitaire;
 
@@ -140,6 +166,8 @@ export default class Renderer {
   isEmptyDeck() {
     if (this.solitaire.getCardInDecks().length === 0) {
       DECK().querySelector(".back").classList.add("zero");
+    } else {
+      DECK().querySelector(".back").classList.remove("zero");
     }
   }
 
@@ -152,28 +180,8 @@ export default class Renderer {
       data-card-number="${card.number}"
       data-card-type="${card.type}"
       data-card-state="${card.state}"
-      style="top: 0px; left: 0px; background-image: url('${card.image}');">
-      <!--
-        <div class="card-top">
-          <span>
-            ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-          </span>
-          <span>
-            ${CARD_ENV.TAG[card.number]}
-          </span>
-        </div>
-        <div class="card-mid">
-          ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-        </div>
-        <div class="card-bottom">
-          <span>
-            ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-          </span>
-          <span>
-            ${CARD_ENV.TAG[card.number]}
-          </span>
-        </div>
-      -->
+      style="top: 0px; left: 0px; ${cardImages(card)}">
+      ${cardTexts(card)}
       </div>
     `;
   }
@@ -186,28 +194,8 @@ export default class Renderer {
     data-card-number="${card.number}"
     data-card-type="${card.type}"
     data-card-state="${card.state}"
-    style="top: ${order * 22}px; background-image: url('${card.image}');">
-    <!--
-      <div class="card-top">
-        <span>
-          ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-        </span>
-        <span>
-          ${CARD_ENV.TAG[card.number]}
-        </span>
-      </div>
-      <div class="card-mid">
-        ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-      </div>
-      <div class="card-bottom">
-        <span>
-          ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-        </span>
-        <span>
-          ${CARD_ENV.TAG[card.number]}
-        </span>
-      </div>
-    -->
+    style="top: ${order * 22}px; ${cardImages(card)}">
+    ${cardTexts(card)}
   </div>`;
   }
 
@@ -220,28 +208,8 @@ export default class Renderer {
     data-card-number="${card.number}"
     data-card-type="${card.type}"
     data-card-state="${card.state}"
-    style="left: ${order * 22}px; background-image: url('${card.image}');">
-    <!--
-      <div class="card-top">
-        <span>
-          ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-        </span>
-        <span>
-          ${CARD_ENV.TAG[card.number]}
-        </span>
-      </div>
-      <div class="card-mid">
-        ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-      </div>
-      <div class="card-bottom">
-        <span>
-          ${CARD_ENV.SHAPE[card.type as OnlyUsableCard]}
-        </span>
-        <span>
-          ${CARD_ENV.TAG[card.number]}
-        </span>
-      </div>
-    -->
+    style="left: ${order * 22}px; ${cardImages(card)}">
+    ${cardTexts(card)}
     </div>
   `;
   }

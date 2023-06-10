@@ -2,6 +2,9 @@ import { CARD_ENV } from "../util/global";
 import Card from "./Card";
 
 export default class Solitaire {
+  empty: Card = new Card("empty", 0);
+  back: Card = new Card("back", 0);
+
   selector: [Card[] | null, Card | null] = [null, null];
 
   deck: CardDeck = {
@@ -11,11 +14,8 @@ export default class Solitaire {
     clover: [],
   };
 
-  empty: Card = new Card("empty", 0);
-  back: Card = new Card("back", 0);
-
+  store: Card[] = [];
   pick: Card[] = [];
-
   stack: {
     [k in OnlyUsableCard]: Card[];
   } = {
@@ -24,12 +24,12 @@ export default class Solitaire {
     spade: [],
     clover: [],
   };
-
   ground: Card[][] = [[], [], [], [], [], [], []];
 
   constructor() {
     this.#initDeck();
     this.#deckToGround();
+    this.#deckToStore();
     // console.log(this.deck);
     // console.log(this.ground);
   }
@@ -44,6 +44,7 @@ export default class Solitaire {
     };
     this.empty = new Card("empty", 0);
     this.back = new Card("back", 0);
+    this.store = [];
     this.pick = [];
     this.stack = {
       heart: [],
@@ -54,6 +55,7 @@ export default class Solitaire {
     this.ground = [[], [], [], [], [], [], []];
     this.#initDeck();
     this.#deckToGround();
+    this.#deckToStore();
   }
 
   #initDeck() {
@@ -76,6 +78,21 @@ export default class Solitaire {
       }
       this.addGroundColumn(card);
     }
+  }
+
+  #deckToStore() {
+    const deckList = this.getCardInDecks();
+    // console.log(deckList);
+    for (;;) {
+      if (deckList.length === 0) break;
+      const card = deckList.splice(
+        Math.floor(Math.random() * deckList.length),
+        1
+      )[0];
+      this.store.push(card);
+      // console.log(card);
+    }
+    // console.log(this.store);
   }
 
   findUsableColumn() {

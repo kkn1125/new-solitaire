@@ -17,12 +17,22 @@ export default class EventManager {
     window.addEventListener("click", this.handleSelectCard.bind(this));
     window.addEventListener("click", this.handleDeckToPick.bind(this));
     window.addEventListener("click", this.handleRestartGame.bind(this));
+    window.addEventListener("resize", this.handleResize.bind(this));
+  }
+
+  handleResize() {
+    if (innerWidth > 768) {
+      this.renderer.update();
+    } else {
+      this.renderer.update();
+    }
   }
 
   removeAllListeners() {
     window.removeEventListener("click", this.handleSelectCard.bind(this));
     window.removeEventListener("click", this.handleDeckToPick.bind(this));
     window.removeEventListener("click", this.handleRestartGame.bind(this));
+    window.removeEventListener("resize", this.handleResize.bind(this));
   }
 
   handleRestartGame(e: MouseEvent) {
@@ -45,15 +55,21 @@ export default class EventManager {
       const cosestDeck = target.closest("#deck");
 
       if (cosestDeck) {
-        const deckCards = this.solitaire.getCardInDecks();
+        const deckCards = this.solitaire.store;
         if (deckCards.length > 0) {
-          const pickCard = deckCards.splice(
-            Math.floor(Math.random() * deckCards.length)
-          )[0];
-
+          const pickCard = deckCards.shift();
           pickCard.updateState("pick");
           pickCard.open();
           this.solitaire.pick.push(pickCard);
+        } else {
+          this.solitaire.store.push(
+            ...this.solitaire.pick.splice(0).map((card) => {
+              card.isOpen = false;
+              card.updateColumn(-1);
+              card.updateState("deck");
+              return card;
+            })
+          );
         }
         this.renderer.update();
       }
