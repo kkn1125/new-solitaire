@@ -35,10 +35,10 @@ body {
     user-select: none;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 0.3rem 0.8rem;
+    padding: 1.2rem 0.8rem;
     position: fixed;
     bottom: 25px;
-    right: 25px;
+    right: 15px;
     font-weight: 700;
     font-size: 14px;
     color: white;
@@ -65,11 +65,11 @@ body {
     left: 50%;
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 80%;
     margin: auto;
     border: 1px solid #ccc;
     padding: 2rem;
-    gap: 2rem;
+    gap: 4rem;
 
     @media (max-width: 568px) {
       padding: 0.5rem;
@@ -80,30 +80,36 @@ body {
       display: flex;
       justify-content: space-between;
       gap: 1rem;
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+      }
 
       #pick-deck {
         display: flex;
         gap: 1rem;
+
         #deck {
           position: relative;
           display: flex;
+
           @include card-parent;
 
           & .back.zero {
-            &::before {
-              content: "EMPTY";
-              position: absolute;
-              font-weight: 700;
-              color: white;
-              top: 50%;
-              left: 50%;
-              z-index: 5;
-              transform: translate(-50%, -50%);
-              -webkit-transform: translate(-50%, -50%);
-              -moz-transform: translate(-50%, -50%);
-              -ms-transform: translate(-50%, -50%);
-              -o-transform: translate(-50%, -50%);
-            }
+            // &::before {
+            //   content: "EMPTY";
+            //   position: absolute;
+            //   font-weight: 700;
+            //   color: white;
+            //   top: 50%;
+            //   left: 50%;
+            //   z-index: 5;
+            //   transform: translate(-50%, -50%);
+            //   -webkit-transform: translate(-50%, -50%);
+            //   -moz-transform: translate(-50%, -50%);
+            //   -ms-transform: translate(-50%, -50%);
+            //   -o-transform: translate(-50%, -50%);
+            // }
             filter: brightness(0.85);
             -webkit-filter: brightness(0.85);
             //border: 5px dashed #000000;
@@ -118,6 +124,9 @@ body {
           display: flex;
           @include card-parent;
           min-width: 150px;
+          @media (max-width: 768px) {
+            min-width: 75px;
+          }
 
           .card:last-child:hover {
             box-shadow: 0 0 0 0.3rem #164fc926;
@@ -140,6 +149,7 @@ body {
 
       #stack {
         display: flex;
+        gap: 1rem;
         @include card-parent;
         #diamond-stack,
         #heart-stack,
@@ -155,7 +165,10 @@ body {
         display: flex;
         gap: 1rem;
         justify-content: space-between;
-        min-height: 300px;
+        min-height: 550px;
+        @media (max-width: 768px) {
+          min-height: 300px;
+        }
 
         .column {
           @include card-parent;
@@ -170,19 +183,25 @@ body {
     .empty {
       font-size: calc(4vw * 0.25);
       overflow: hidden;
-      width: calc(4vw + 1vh);
-      height: calc(4vw * 1.4 + 1vh);
+      width: calc(7vw + 1vh);
+      height: calc(7vw * 1.4 + 1vh);
       border: 1px solid #ccc;
       border-radius: 0.5rem;
       -webkit-border-radius: 0.5rem;
       -moz-border-radius: 0.5rem;
       -ms-border-radius: 0.5rem;
       -o-border-radius: 0.5rem;
-      @media (max-width: 568px) {
+
+      @media (max-width: 768px) {
         font-size: calc(4vw * 0.25);
         overflow: hidden;
-        width: calc(6vw + 1vh);
-        height: calc(6vw * 1.4 + 1vh);
+        width: calc(7vw + 1vh);
+        height: calc(7vw * 1.4 + 1vh);
+        border-radius: 0.2rem;
+        -webkit-border-radius: 0.2rem;
+        -moz-border-radius: 0.2rem;
+        -ms-border-radius: 0.2rem;
+        -o-border-radius: 0.2rem;
       }
 
       @include card-size;
