@@ -27,11 +27,8 @@ body {
 body {
   position: relative;
 
+  #auto-complete,
   #restart {
-    &:hover,
-    &:focus-within {
-      box-shadow: 0 0 0 0.3rem #348389a6;
-    }
     &:active {
       filter: brightness(0.85);
       -webkit-filter: brightness(0.85);
@@ -42,12 +39,10 @@ body {
     text-transform: uppercase;
     padding: 1.2rem 0.8rem;
     position: fixed;
-    bottom: 25px;
-    right: 15px;
+
     font-weight: 700;
     font-size: 14px;
     color: white;
-    background-color: #348389;
     border: none;
     border-radius: 0.3rem;
     -webkit-border-radius: 0.3rem;
@@ -61,7 +56,47 @@ body {
     -o-transition: 150ms ease-in-out;
   }
 
+  #restart {
+    &:hover,
+    &:focus-within {
+      box-shadow: 0 0 0 0.3rem #348389a6;
+    }
+    background-color: #348389;
+    bottom: 25px;
+    right: 15px;
+  }
+  #auto-complete {
+    &:hover,
+    &:focus-within {
+      box-shadow: 0 0 0 0.3rem #893489a6;
+    }
+    background-color: #893489;
+    bottom: 25px;
+    right: 150px;
+  }
+
   background-color: #121212;
+
+  #timer {
+    color: #ffffff;
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    background-color: #ffffff56;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.3rem;
+    -webkit-border-radius: 0.3rem;
+    -moz-border-radius: 0.3rem;
+    -ms-border-radius: 0.3rem;
+    -o-border-radius: 0.3rem;
+
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+  }
+
   #wrapper {
     background-color: #565656;
     user-select: none;
@@ -85,7 +120,7 @@ body {
     #top {
       display: flex;
       justify-content: center;
-      gap: 20.7rem;
+      gap: 10vw;
 
       @media (max-width: 768px) {
         flex-direction: column;
@@ -172,14 +207,20 @@ body {
     }
 
     #body {
+      display: flex;
+      flex: 1;
+
       #ground {
+        // height: 60vh;
+        // max-height: 400px;
         display: flex;
-        gap: 3rem;
+        gap: 3vw;
         justify-content: center;
-        min-height: 550px;
+        min-height: 300px;
+        flex: 1;
         @media (max-width: 768px) {
-          gap: 0.5rem;
-          min-height: 350px;
+          gap: 1.8vw;
+          // min-height: 350px;
         }
 
         .column {
@@ -267,7 +308,7 @@ body {
       & .card-top {
         display: flex;
         justify-content: space-around;
-        padding-top: 0.5rem;
+        padding-top: 0.2rem;
       }
       & .card-mid {
         text-align: center;
@@ -280,10 +321,10 @@ body {
         display: flex;
         flex-direction: row-reverse;
         justify-content: space-around;
-        padding-bottom: 0.5rem;
-        @media (max-width: 568px) {
-          display: none;
-        }
+        padding-bottom: 0.2rem;
+        // @media (max-width: 568px) {
+        //   display: none;
+        // }
       }
     }
 

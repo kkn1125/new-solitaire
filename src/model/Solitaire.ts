@@ -28,10 +28,9 @@ export default class Solitaire {
 
   constructor() {
     this.#initDeck();
-    this.#deckToGround();
-    this.#deckToStore();
-    // console.log(this.deck);
-    // console.log(this.ground);
+    this.#deckToGroundTest();
+    // this.#deckToGround();
+    // this.#deckToStore();
   }
 
   regame() {
@@ -67,6 +66,19 @@ export default class Solitaire {
     }
   }
 
+  #deckToGroundTest() {
+    for (let type of CARD_ENV.TYPES) {
+      for (let i = 12; i >= 0; i--) {
+        const card = this.deck[type][i] as Card;
+        const index = CARD_ENV.TYPES.findIndex((t) => t === type);
+        card.updateState("ground");
+        card.updateColumn(index);
+        card.open();
+        this.ground[index].push(card);
+      }
+    }
+  }
+
   #deckToGround() {
     for (let i = 0; i < 28; i++) {
       const randomType = Math.floor(Math.random() * CARD_ENV.TYPES.length);
@@ -82,7 +94,6 @@ export default class Solitaire {
 
   #deckToStore() {
     const deckList = this.getCardInDecks();
-    // console.log(deckList);
     for (;;) {
       if (deckList.length === 0) break;
       const card = deckList.splice(
@@ -90,9 +101,7 @@ export default class Solitaire {
         1
       )[0];
       this.store.push(card);
-      // console.log(card);
     }
-    // console.log(this.store);
   }
 
   findUsableColumn() {
@@ -211,8 +220,6 @@ export default class Solitaire {
         this.ground[column].push(...slice);
         this.afterCardOpen(column);
         this.moveToGround(startCard, column);
-        // startCard.updateColumn(column);
-        // startCard.updateState("ground");
       }
     } else if (startCard.state === "ground") {
       const startIndex = this.findOrderInColumn(startCard);
@@ -222,8 +229,6 @@ export default class Solitaire {
       );
       this.afterCardOpen(startColumn);
       this.moveToGround(startCard, column);
-      // startCard.updateColumn(column);
-      // startCard.updateState("ground");
     } else if (startCard.state === "pick") {
       const startIndex = this.findOrderInPickList(startCard);
       const slice = this.pick.splice(startIndex);
@@ -231,9 +236,6 @@ export default class Solitaire {
         ...slice.map((card) => card.updateColumn(column))
       );
       this.moveToGround(startCard, column);
-      // startCard.updateColumn(column);
-      // startCard.updateState("ground");
-      // this.ground[column].push(startCard);
     }
   }
 

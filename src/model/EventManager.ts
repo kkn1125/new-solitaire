@@ -14,10 +14,64 @@ export default class EventManager {
   }
 
   #initListeners() {
+    window.addEventListener("click", this.handleAutoComplete.bind(this));
     window.addEventListener("click", this.handleSelectCard.bind(this));
     window.addEventListener("click", this.handleDeckToPick.bind(this));
     window.addEventListener("click", this.handleRestartGame.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
+  }
+
+  removeAllListeners() {
+    window.removeEventListener("click", this.handleSelectCard.bind(this));
+    window.removeEventListener("click", this.handleDeckToPick.bind(this));
+    window.removeEventListener("click", this.handleRestartGame.bind(this));
+    window.removeEventListener("resize", this.handleResize.bind(this));
+  }
+
+  handleAutoComplete(e: MouseEvent) {
+    const self = this;
+    const target = e.target as HTMLButtonElement;
+
+    if (target.id !== "auto-complete") return;
+    this.renderer.active_auto_complete = true;
+    this.renderer.auto_complete = false;
+    target.remove();
+
+    function autoComplete() {
+      const filtered = self.solitaire.ground.filter((column) => column.length);
+      for (let i = 0; i < filtered.length; i++) {
+        const column = filtered[i];
+        const columnLast = column.slice(-1)[0];
+        if (columnLast) {
+          const stack = self.solitaire.stack[columnLast.type as OnlyUsableCard];
+          if (stack.length === 0) {
+            const card = column.splice(-1)[0];
+            card.updateColumn(-1);
+            card.updateState("stack");
+            stack.push(card);
+            self.renderer.update();
+          } else if (stack.slice(-1)[0].number + 1 === columnLast.number) {
+            const card = column.splice(-1)[0];
+            card.updateColumn(-1);
+            card.updateState("stack");
+            stack.push(card);
+            self.renderer.update();
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+      }
+
+      if (filtered.some((column) => column.length > 0)) {
+        setTimeout(() => {
+          autoComplete();
+        }, 100);
+      }
+    }
+
+    autoComplete();
   }
 
   handleResize() {
@@ -26,13 +80,6 @@ export default class EventManager {
     } else {
       this.renderer.update();
     }
-  }
-
-  removeAllListeners() {
-    window.removeEventListener("click", this.handleSelectCard.bind(this));
-    window.removeEventListener("click", this.handleDeckToPick.bind(this));
-    window.removeEventListener("click", this.handleRestartGame.bind(this));
-    window.removeEventListener("resize", this.handleResize.bind(this));
   }
 
   handleRestartGame(e: MouseEvent) {
@@ -52,9 +99,9 @@ export default class EventManager {
   handleDeckToPick(e: MouseEvent) {
     const target = e.target as HTMLDivElement;
     if (target) {
-      const cosestDeck = target.closest("#deck");
+      const closestDeck = target.closest("#deck");
 
-      if (cosestDeck) {
+      if (closestDeck) {
         const deckCards = this.solitaire.store;
         if (deckCards.length > 0) {
           const pickCard = deckCards.shift();
@@ -104,6 +151,7 @@ export default class EventManager {
         );
         console.log("good");
         this.solitaire.moveToColumn(selector[0], index);
+        this.renderer.update();
       } else if (
         emptyEl &&
         selector[0] !== null &&
@@ -123,9 +171,6 @@ export default class EventManager {
           if (card.selected) {
             card.selected = false;
           } else {
-            // console.log(cardEl, card);
-            // card.selected = true;
-
             if (selector[0] === null) {
               const state = cardEl.dataset.cardState;
               const column = (cardEl as unknown as HTMLDivElement).parentNode;
@@ -135,8 +180,6 @@ export default class EventManager {
                 lastItem === cardEl
               ) {
                 if (this.solitaire.isStackDirectly(card)) {
-                  // console.log(1);
-
                   this.solitaire.clearSelector();
                   card.selected = false;
                   cardEl.classList.remove("selected");
@@ -144,7 +187,6 @@ export default class EventManager {
                   return;
                 }
 
-                // console.log("[SYS] Selected Card", card);
                 card.selected = true;
                 selector[0] = [card];
               } else if (state === "ground") {
@@ -163,9 +205,7 @@ export default class EventManager {
                 }
               }
             } else {
-              // console.log(selector[0]);
-              // console.log(selector[1]);
-              if (selector[1] === null) {
+              if (selector[1] === null && card.state === "ground") {
                 selector[1] = card;
 
                 const isStackable = this.solitaire.compareWith(
@@ -182,6 +222,10 @@ export default class EventManager {
                 this.solitaire.clearSelector();
                 card.selected = false;
                 cardEl.classList.remove("selected");
+              } else {
+                this.solitaire.clearSelector();
+                card.selected = false;
+                cardEl.classList.remove("selected");
               }
             }
           }
@@ -189,7 +233,6 @@ export default class EventManager {
         this.renderer.update();
       } else {
         this.solitaire.clearSelector();
-        this.renderer.update();
       }
     }
   }

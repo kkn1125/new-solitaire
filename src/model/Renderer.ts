@@ -1,8 +1,19 @@
-import { APP, CARD_ENV, DECK, GROUND, PICK, STACK } from "../util/global";
+import {
+  APP,
+  AUTO_COMPLETE,
+  CARD_ENV,
+  DECK,
+  GROUND,
+  PICK,
+  STACK,
+  TIMER,
+} from "../util/global";
+import { format, formatFromCountdown } from "../util/tool";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
 
-const useImage = () => false || innerWidth > 768;
+const isDesktop = () => innerWidth > 768;
+const useImage = () => false || isDesktop();
 
 const cardImages = (card: Card) =>
   useImage() ? `background-image: url('${card.image}');` : "";
@@ -30,13 +41,40 @@ const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
 
 export default class Renderer {
   solitaire: Solitaire;
+  timer: number;
+  auto_complete: boolean = false;
+  active_auto_complete: boolean = false;
 
   constructor(solitaire: Solitaire) {
     this.solitaire = solitaire;
   }
 
+  renderTimer() {
+    clearInterval(this.timer);
+    let startTime = 0; // 1 second per unit = 0.1
+
+    TIMER().innerHTML = `00:00`;
+    this.startTimer(startTime);
+  }
+
+  startTimer(startTime: number) {
+    this.timer = setInterval(() => {
+      const form = formatFromCountdown((startTime += 0.001));
+      let count = 9;
+      let loop = setInterval(() => {
+        if (count === 0) {
+          clearTimeout(loop);
+        }
+        TIMER().innerHTML = `${form}${count}`;
+        count--;
+      }, 1);
+      TIMER().innerHTML = `${form}0`;
+    }, 10);
+  }
+
   layout() {
     APP.innerHTML = `
+      <div id="timer"></div>
       <div id="wrapper">
 
         <div id="top">
@@ -131,8 +169,6 @@ export default class Renderer {
       STACK().querySelector(`#${type}-stack`);
 
     Object.entries(stacks).forEach(([type, cards]) => {
-      // console.log(type);
-      // console.log(el(type as OnlyUsableCard));
       el(type as OnlyUsableCard).innerHTML = empty;
       cards.forEach((card, order) => {
         el(card.type as OnlyUsableCard).innerHTML += this.stackCardForm(
@@ -153,6 +189,7 @@ export default class Renderer {
 
   render() {
     this.layout();
+    this.renderTimer();
     this.update();
   }
 
@@ -161,10 +198,74 @@ export default class Renderer {
     this.pick();
     this.stack();
     this.isEmptyDeck();
+    this.checkAutoStack();
+    if (this.auto_complete && !AUTO_COMPLETE()) {
+      APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
+    }
+  }
+
+  checkAutoStack() {
+    const isEmptyStore = this.solitaire.store.length === 0;
+    const isEmptyPick = this.solitaire.pick.length === 0;
+    if (isEmptyPick && isEmptyStore) {
+      // console.log("empty store");
+      // console.log("empty pick");
+      const copyGround = this.solitaire.ground.slice(0);
+      const copyStack = Object.assign({}, this.solitaire.stack);
+      let isStop = false;
+
+      while (copyGround.every((column) => column.length !== 0)) {
+        const diamond = copyStack.diamond.slice(-1)[0];
+        const heart = copyStack.heart.slice(-1)[0];
+        const spade = copyStack.spade.slice(-1)[0];
+        const clover = copyStack.clover.slice(-1)[0];
+
+        for (let column of copyGround) {
+          const lastCardOfColumn = column.slice(-1)[0];
+          if (!lastCardOfColumn) continue;
+          const isSameForDiamond =
+            lastCardOfColumn.number === diamond.number + 1 &&
+            lastCardOfColumn.type === diamond.type;
+          const isSameForHeart =
+            lastCardOfColumn.number === heart.number + 1 &&
+            lastCardOfColumn.type === heart.type;
+          const isSameForSpade =
+            lastCardOfColumn.number === spade.number + 1 &&
+            lastCardOfColumn.type === spade.type;
+          const isSameForClover =
+            lastCardOfColumn.number === clover.number + 1 &&
+            lastCardOfColumn.type === clover.type;
+          if (isSameForDiamond) {
+            copyStack["diamond"].push(copyStack.diamond.splice(-1)[0]);
+            break;
+          } else if (isSameForHeart) {
+            copyStack["heart"].push(copyStack.heart.splice(-1)[0]);
+            break;
+          } else if (isSameForSpade) {
+            copyStack["spade"].push(copyStack.spade.splice(-1)[0]);
+            break;
+          } else if (isSameForClover) {
+            copyStack["clover"].push(copyStack.clover.splice(-1)[0]);
+            break;
+          } else {
+            isStop = true;
+            break;
+          }
+        }
+
+        if (isStop) {
+          break;
+        }
+      }
+      if (!isStop && !this.auto_complete && !this.active_auto_complete) {
+        this.auto_complete = true;
+      }
+      // console.log(isStop ? "no auto complete" : "auto complete");
+    }
   }
 
   isEmptyDeck() {
-    if (this.solitaire.getCardInDecks().length === 0) {
+    if (this.solitaire.store.length === 0) {
       DECK().querySelector(".back").classList.add("zero");
     } else {
       DECK().querySelector(".back").classList.remove("zero");
@@ -194,7 +295,9 @@ export default class Renderer {
     data-card-number="${card.number}"
     data-card-type="${card.type}"
     data-card-state="${card.state}"
-    style="top: ${order * 22}px; ${cardImages(card)}">
+    style="top: ${isDesktop() ? order * 22 : order * 15}px; ${cardImages(
+      card
+    )}">
     ${cardTexts(card)}
   </div>`;
   }

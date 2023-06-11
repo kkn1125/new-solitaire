@@ -36,7 +36,12 @@ export const GROUND = () => document.querySelector("#ground") as HTMLDivElement;
 export const STACK = () => document.querySelector("#stack") as HTMLDivElement;
 export const PICK = () => document.querySelector("#pick") as HTMLDivElement;
 export const DECK = () => document.querySelector("#deck") as HTMLDivElement;
-export const RESTART = () => document.querySelector("#restart") as HTMLDivElement;
+export const RESTART = () =>
+  document.querySelector("#restart") as HTMLDivElement;
+export const TIMER = () => document.querySelector("#timer") as HTMLDivElement;
+
+export const AUTO_COMPLETE = () =>
+  document.querySelector("#auto-complete") as HTMLDivElement;
 
 /* images */
 export const IMAGE = (filename: string, number: number) =>
