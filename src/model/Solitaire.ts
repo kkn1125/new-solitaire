@@ -28,9 +28,9 @@ export default class Solitaire {
 
   constructor() {
     this.#initDeck();
-    this.#deckToGroundTest();
-    // this.#deckToGround();
-    // this.#deckToStore();
+    // this.#deckToGroundTest();
+    this.#deckToGround();
+    this.#deckToStore();
   }
 
   regame() {
