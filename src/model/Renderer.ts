@@ -74,7 +74,7 @@ export default class Renderer {
 
   layout() {
     APP.innerHTML = `
-      <div id="timer"></div>
+      <!-- <div id="timer"></div> -->
       <div id="wrapper">
 
         <div id="top">
@@ -189,7 +189,7 @@ export default class Renderer {
 
   render() {
     this.layout();
-    this.renderTimer();
+    // this.renderTimer();
     this.update();
   }
 

@@ -36,7 +36,7 @@ export default class Solitaire {
       this.#deckToGround();
     }
     this.#deckToStore();
-    console.log(this.store);
+    // console.log(this.store);
   }
 
   regame() {
