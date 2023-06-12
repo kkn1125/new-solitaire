@@ -323,13 +323,18 @@ export default class Renderer {
   }
 
   soundPick() {
-    var audio = new Audio("/sounds/pick_sound.mp4");
+    var audio = new Audio(
+      (import.meta.env.DEV ? "" : "/new-solitaire") + "/sounds/pick_sound.mp4"
+    );
     audio.currentTime = 0.05;
     audio.volume = 0.7;
     audio.play();
   }
   soundShuffle() {
-    var audio = new Audio("/sounds/shuffle_sound.mp4");
+    var audio = new Audio(
+      (import.meta.env.DEV ? "" : "/new-solitaire") +
+        "/sounds/shuffle_sound.mp4"
+    );
     audio.currentTime = 0.01;
     audio.volume = 0.5;
     audio.play();
