@@ -204,6 +204,15 @@ export default class Renderer {
     }
   }
 
+  isWin() {
+    if (
+      this.solitaire.store.length === 0 &&
+      this.solitaire.getCardInStacks().length === 52
+    ) {
+      alert("이겼습니다!!!🌟");
+    }
+  }
+
   checkAutoStack() {
     const isEmptyStore = this.solitaire.store.length === 0;
     const isEmptyPick = this.solitaire.pick.length === 0;
