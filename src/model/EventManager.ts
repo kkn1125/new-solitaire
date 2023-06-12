@@ -1,4 +1,4 @@
-import { RESTART } from "../util/global";
+import { APP, pickSound, RESTART } from "../util/global";
 import Card from "./Card";
 import Renderer from "./Renderer";
 import Solitaire from "./Solitaire";
@@ -87,6 +87,7 @@ export default class EventManager {
     if (target.id === "restart") {
       this.solitaire.regame();
       this.renderer.render();
+      this.renderer.soundShuffle();
     }
   }
 
@@ -108,6 +109,7 @@ export default class EventManager {
           pickCard.updateState("pick");
           pickCard.open();
           this.solitaire.pick.push(pickCard);
+          this.renderer.soundPick();
         } else {
           this.solitaire.store.push(
             ...this.solitaire.pick.splice(0).map((card) => {
@@ -117,7 +119,9 @@ export default class EventManager {
               return card;
             })
           );
+          this.renderer.soundShuffle();
         }
+
         this.renderer.update();
       }
     }
@@ -157,6 +161,7 @@ export default class EventManager {
         console.log("good");
         this.solitaire.moveToColumn(selector[0], index);
         this.renderer.update();
+        this.renderer.soundPick();
       } else if (
         emptyEl &&
         selector[0] !== null &&
@@ -171,7 +176,6 @@ export default class EventManager {
         const card = this.solitaire.deck[type].find(
           (card) => card.number === number
         ) as Card;
-        console.log(card);
         if (cardEl.dataset.cardOpen === "true") {
           if (card.selected) {
             card.selected = false;
@@ -189,6 +193,7 @@ export default class EventManager {
                   card.selected = false;
                   cardEl.classList.remove("selected");
                   this.renderer.update();
+                  this.renderer.soundPick();
                   return;
                 }
 
@@ -220,6 +225,7 @@ export default class EventManager {
                 if (isStackable) {
                   console.log("good");
                   this.solitaire.moveToColumn(selector[0], selector[1].column);
+                  this.renderer.soundPick();
                 } else {
                   console.log("bad");
                 }

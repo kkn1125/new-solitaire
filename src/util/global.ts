@@ -48,3 +48,7 @@ export const IMAGE = (filename: string, number: number) =>
   `${
     import.meta.env.DEV ? "" : "/new-solitaire"
   }/cards/${filename}_${number}.png`;
+
+/* sounds */
+export const pickSound = () =>
+  document.querySelector("#pick-sound") as HTMLAudioElement;

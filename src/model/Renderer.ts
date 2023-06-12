@@ -41,7 +41,7 @@ const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
 
 export default class Renderer {
   solitaire: Solitaire;
-  timer: NodeJS.Timer;
+  timer: number;
   auto_complete: boolean = false;
   active_auto_complete: boolean = false;
 
@@ -320,5 +320,18 @@ export default class Renderer {
     ${cardTexts(card)}
     </div>
   `;
+  }
+
+  soundPick() {
+    var audio = new Audio("./src/assets/sounds/pick_sound.mp4");
+    audio.currentTime = 0.05;
+    audio.volume = 0.7;
+    audio.play();
+  }
+  soundShuffle() {
+    var audio = new Audio("./src/assets/sounds/shuffle_sound.mp4");
+    audio.currentTime = 0.01;
+    audio.volume = 0.5;
+    audio.play();
   }
 }
