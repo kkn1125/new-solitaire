@@ -1,10 +1,11 @@
 import { CARD_ENV } from "../util/global";
 import Card from "./Card";
 
+type GameMode = "development" | "production";
 export default class Solitaire {
   empty: Card = new Card("empty", 0);
   back: Card = new Card("back", 0);
-
+  mode: GameMode = "development";
   selector: [Card[] | null, Card | null] = [null, null];
 
   deck: CardDeck = {
@@ -26,11 +27,16 @@ export default class Solitaire {
   };
   ground: Card[][] = [[], [], [], [], [], [], []];
 
-  constructor() {
+  constructor(mode?: GameMode) {
+    this.mode = mode || "development";
     this.#initDeck();
-    // this.#deckToGroundTest();
-    this.#deckToGround();
+    if (this.mode === "development") {
+      this.#deckToGroundTest();
+    } else {
+      this.#deckToGround();
+    }
     this.#deckToStore();
+    console.log(this.store);
   }
 
   regame() {
@@ -68,7 +74,7 @@ export default class Solitaire {
 
   #deckToGroundTest() {
     for (let type of CARD_ENV.TYPES) {
-      for (let i = 12; i >= 0; i--) {
+      for (let i = 12; i >= 6; i--) {
         const card = this.deck[type][i] as Card;
         const index = CARD_ENV.TYPES.findIndex((t) => t === type);
         card.updateState("ground");

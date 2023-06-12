@@ -141,9 +141,14 @@ export default class EventManager {
     if (target) {
       const emptyEl = target.closest(".empty");
       const selector = this.solitaire.selector;
+      const testModeWithoutKing = this.solitaire.mode === "development";
 
       /* king on empty place logic */
-      if (emptyEl && selector[0] !== null && selector[0][0].number === 13) {
+      if (
+        emptyEl &&
+        selector[0] !== null &&
+        (testModeWithoutKing || selector[0][0].number === 13)
+      ) {
         const column = target.parentElement as HTMLDivElement;
         const ground = column.parentElement as HTMLDivElement;
         const index = [...ground.children].findIndex(
@@ -155,11 +160,10 @@ export default class EventManager {
       } else if (
         emptyEl &&
         selector[0] !== null &&
-        selector[0][0].number !== 13
+        (testModeWithoutKing || selector[0][0].number !== 13)
       ) {
         console.log("bad");
       }
-
       if (target.closest(".card")) {
         const cardEl = target.closest(".card") as HTMLDivElement;
         const type = cardEl.dataset.cardType as OnlyUsableCard;
@@ -167,6 +171,7 @@ export default class EventManager {
         const card = this.solitaire.deck[type].find(
           (card) => card.number === number
         ) as Card;
+        console.log(card);
         if (cardEl.dataset.cardOpen === "true") {
           if (card.selected) {
             card.selected = false;

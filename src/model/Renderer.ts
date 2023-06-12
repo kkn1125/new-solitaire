@@ -41,7 +41,7 @@ const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
 
 export default class Renderer {
   solitaire: Solitaire;
-  timer: number;
+  timer: NodeJS.Timer;
   auto_complete: boolean = false;
   active_auto_complete: boolean = false;
 
@@ -198,7 +198,7 @@ export default class Renderer {
     this.pick();
     this.stack();
     this.isEmptyDeck();
-    this.checkAutoStack();
+    // this.checkAutoStack();
     if (this.auto_complete && !AUTO_COMPLETE()) {
       APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
     }
@@ -260,7 +260,12 @@ export default class Renderer {
       if (!isStop && !this.auto_complete && !this.active_auto_complete) {
         this.auto_complete = true;
       }
-      // console.log(isStop ? "no auto complete" : "auto complete");
+
+      if (this.auto_complete && this.solitaire.getCardInGrounds().length > 0) {
+        this.auto_complete = true;
+        this.active_auto_complete = false;
+      }
+      console.log(isStop ? "no auto complete" : "auto complete");
     }
   }
 
