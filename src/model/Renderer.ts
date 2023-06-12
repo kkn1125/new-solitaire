@@ -202,6 +202,7 @@ export default class Renderer {
     if (this.auto_complete && !AUTO_COMPLETE()) {
       APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
     }
+    this.isWin();
   }
 
   isWin() {
