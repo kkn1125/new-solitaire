@@ -7,7 +7,7 @@ import Solitaire from "./model/Solitaire";
   1: development
   0: production
 */
-const MODE = 1;
+const MODE = 0;
 
 const game = new Solitaire(MODE);
 const renderer = new Renderer(game);
