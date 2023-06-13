@@ -238,10 +238,10 @@ export default class Renderer {
   checkAutoStack() {
     const isEmptyStore = this.solitaire.store.length === 0;
     const isEmptyPick = this.solitaire.pick.length === 0;
-    const isOpenInDeck = this.solitaire
-      .getCardInDecks()
+    const isOpenInGround = this.solitaire
+      .getCardInGrounds()
       .every((card) => card.isOpen);
-    if (isOpenInDeck && isEmptyPick && isEmptyStore) {
+    if (isOpenInGround && isEmptyPick && isEmptyStore) {
       // console.log(isEmptyPick);
       // console.log(isEmptyStore);
       if (
