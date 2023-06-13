@@ -41,7 +41,7 @@ const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
 
 export default class Renderer {
   solitaire: Solitaire;
-  timer: NodeJS.Timer;
+  timer: number;
   auto_complete: boolean = false;
   active_auto_complete: boolean = false;
 
@@ -238,10 +238,17 @@ export default class Renderer {
   checkAutoStack() {
     const isEmptyStore = this.solitaire.store.length === 0;
     const isEmptyPick = this.solitaire.pick.length === 0;
-    if (isEmptyPick && isEmptyStore) {
+    const isOpenInDeck = this.solitaire
+      .getCardInDecks()
+      .every((card) => card.isOpen);
+    if (isOpenInDeck && isEmptyPick && isEmptyStore) {
       console.log(isEmptyPick);
       console.log(isEmptyStore);
-      if (!this.auto_complete && this.solitaire.getCardInGrounds().length > 0) {
+      if (
+        !this.active_auto_complete &&
+        !this.auto_complete &&
+        this.solitaire.getCardInGrounds().length > 0
+      ) {
         this.auto_complete = true;
         this.active_auto_complete = false;
       }

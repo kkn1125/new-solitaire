@@ -63,7 +63,11 @@ export default class Solitaire {
     };
     this.ground = [[], [], [], [], [], [], []];
     this.#initDeck();
-    this.#deckToGround();
+    if (this.mode === "development") {
+      this.#deckToGroundTest();
+    } else {
+      this.#deckToGround();
+    }
     this.#deckToStore();
   }
 

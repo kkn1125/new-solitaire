@@ -218,6 +218,7 @@ body {
         justify-content: center;
         min-height: 300px;
         flex: 1;
+
         @media (max-width: 768px) {
           gap: 1.8vw;
           height: 40vh;
@@ -237,14 +238,26 @@ body {
     .empty {
       font-size: calc(4vw * 0.25);
       overflow: hidden;
-      width: calc(5vw + 1vh);
-      height: calc(5vw * 1.5 + 1vh);
+      width: calc(7.2vw + 1vh);
+      height: calc(7.2vw * 1.5 + 1vh);
       border: 1px solid #ccc;
       border-radius: 0.5rem;
       -webkit-border-radius: 0.5rem;
       -moz-border-radius: 0.5rem;
       -ms-border-radius: 0.5rem;
       -o-border-radius: 0.5rem;
+
+      @media (min-width: 769px) and (max-width: 968px) {
+        font-size: calc(4vw * 0.25);
+        overflow: hidden;
+        width: calc(7.2vw + 1vh);
+        height: calc(7.2vw * 1.5 + 1vh);
+        border-radius: 0.2rem;
+        -webkit-border-radius: 0.2rem;
+        -moz-border-radius: 0.2rem;
+        -ms-border-radius: 0.2rem;
+        -o-border-radius: 0.2rem;
+      }
 
       @media (max-width: 768px) {
         font-size: calc(4vw * 0.25);
@@ -292,7 +305,7 @@ body {
           position: absolute;
           top: 50%;
           left: 50%;
-          font-size: 1.5rem;
+          font-size: calc(1rem + 3vw);
           transform: translate(-50%, -50%);
           -webkit-transform: translate(-50%, -50%);
           -moz-transform: translate(-50%, -50%);

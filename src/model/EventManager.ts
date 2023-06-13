@@ -33,7 +33,7 @@ export default class EventManager {
     const target = e.target as HTMLButtonElement;
 
     if (target.id !== "auto-complete") return;
-    
+
     this.renderer.active_auto_complete = true;
     this.renderer.auto_complete = false;
     target.remove();
@@ -72,6 +72,9 @@ export default class EventManager {
         setTimeout(() => {
           autoComplete();
         }, 100);
+      } else {
+        self.renderer.active_auto_complete = false;
+        self.renderer.auto_complete = false;
       }
     }
 
