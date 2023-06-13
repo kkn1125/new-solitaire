@@ -27,8 +27,12 @@ export default class Solitaire {
   };
   ground: Card[][] = [[], [], [], [], [], [], []];
 
-  constructor(mode?: GameMode) {
-    this.mode = mode || "development";
+  constructor(mode?: GameMode | number) {
+    if (typeof mode === "number") {
+      this.mode = mode ? "development" : "production";
+    } else {
+      this.mode = mode || "development";
+    }
     this.#initDeck();
     if (this.mode === "development") {
       this.#deckToGroundTest();
@@ -73,15 +77,18 @@ export default class Solitaire {
   }
 
   #deckToGroundTest() {
-    for (let type of CARD_ENV.TYPES) {
-      for (let i = 12; i >= 6; i--) {
-        const card = this.deck[type][i] as Card;
-        const index = CARD_ENV.TYPES.findIndex((t) => t === type);
+    const slice = ["heart", "spade", "diamond", "clover"];
+
+    for (let i = 12; i >= 0; i--) {
+      for (let type of slice) {
+        const card = this.deck[type as OnlyUsableCard][i] as Card;
+        const index = slice.findIndex((t) => t === type);
         card.updateState("ground");
         card.updateColumn(index);
         card.open();
         this.ground[index].push(card);
       }
+      slice.push(slice.shift());
     }
   }
 

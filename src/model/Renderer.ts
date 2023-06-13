@@ -41,7 +41,7 @@ const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
 
 export default class Renderer {
   solitaire: Solitaire;
-  timer: number;
+  timer: NodeJS.Timer;
   auto_complete: boolean = false;
   active_auto_complete: boolean = false;
 
@@ -167,16 +167,19 @@ export default class Renderer {
     const empty = `<div class="empty"></div>`;
     const el = (type: OnlyUsableCard) =>
       STACK().querySelector(`#${type}-stack`);
-
-    Object.entries(stacks).forEach(([type, cards]) => {
-      el(type as OnlyUsableCard).innerHTML = empty;
-      cards.forEach((card, order) => {
-        el(card.type as OnlyUsableCard).innerHTML += this.stackCardForm(
-          card,
-          order
-        );
+    // console.log(stacks);
+    if (Object.entries(stacks).some((typeStack) => typeStack[1].length > 0)) {
+      Object.entries(stacks).forEach(([type, cards]) => {
+        // console.log(type, cards);
+        el(type as OnlyUsableCard).innerHTML = empty;
+        cards.forEach((card, order) => {
+          el(card.type as OnlyUsableCard).innerHTML += this.stackCardForm(
+            card,
+            order
+          );
+        });
       });
-    });
+    }
   }
 
   pick() {
@@ -198,9 +201,12 @@ export default class Renderer {
     this.pick();
     this.stack();
     this.isEmptyDeck();
-    // this.checkAutoStack();
-    if (this.auto_complete && !AUTO_COMPLETE()) {
-      APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
+    this.checkAutoStack();
+    // console.log(this.auto_complete);
+    if (!this.active_auto_complete) {
+      if (this.auto_complete && !AUTO_COMPLETE()) {
+        APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
+      }
     }
     this.isWin();
   }
@@ -210,73 +216,42 @@ export default class Renderer {
       this.solitaire.store.length === 0 &&
       this.solitaire.getCardInStacks().length === 52
     ) {
-      alert("이겼습니다!!!🌟");
+      setTimeout(() => {
+        alert("✨ 축하드립니다! 게임에서 승리하셨습니다 ✨");
+        if (confirm("새 게임을 시작하시겠습니까?")) {
+          this.regame();
+        } else {
+          /*  */
+        }
+      }, 100);
     }
+  }
+
+  regame() {
+    this.solitaire.regame();
+    this.render();
+    this.soundShuffle();
+    this.auto_complete = false;
+    this.active_auto_complete = false;
   }
 
   checkAutoStack() {
     const isEmptyStore = this.solitaire.store.length === 0;
     const isEmptyPick = this.solitaire.pick.length === 0;
     if (isEmptyPick && isEmptyStore) {
-      // console.log("empty store");
-      // console.log("empty pick");
-      const copyGround = this.solitaire.ground.slice(0);
-      const copyStack = Object.assign({}, this.solitaire.stack);
-      let isStop = false;
-
-      while (copyGround.every((column) => column.length !== 0)) {
-        const diamond = copyStack.diamond.slice(-1)[0];
-        const heart = copyStack.heart.slice(-1)[0];
-        const spade = copyStack.spade.slice(-1)[0];
-        const clover = copyStack.clover.slice(-1)[0];
-
-        for (let column of copyGround) {
-          const lastCardOfColumn = column.slice(-1)[0];
-          if (!lastCardOfColumn) continue;
-          const isSameForDiamond =
-            lastCardOfColumn.number === diamond.number + 1 &&
-            lastCardOfColumn.type === diamond.type;
-          const isSameForHeart =
-            lastCardOfColumn.number === heart.number + 1 &&
-            lastCardOfColumn.type === heart.type;
-          const isSameForSpade =
-            lastCardOfColumn.number === spade.number + 1 &&
-            lastCardOfColumn.type === spade.type;
-          const isSameForClover =
-            lastCardOfColumn.number === clover.number + 1 &&
-            lastCardOfColumn.type === clover.type;
-          if (isSameForDiamond) {
-            copyStack["diamond"].push(copyStack.diamond.splice(-1)[0]);
-            break;
-          } else if (isSameForHeart) {
-            copyStack["heart"].push(copyStack.heart.splice(-1)[0]);
-            break;
-          } else if (isSameForSpade) {
-            copyStack["spade"].push(copyStack.spade.splice(-1)[0]);
-            break;
-          } else if (isSameForClover) {
-            copyStack["clover"].push(copyStack.clover.splice(-1)[0]);
-            break;
-          } else {
-            isStop = true;
-            break;
-          }
-        }
-
-        if (isStop) {
-          break;
-        }
-      }
-      if (!isStop && !this.auto_complete && !this.active_auto_complete) {
-        this.auto_complete = true;
-      }
-
-      if (this.auto_complete && this.solitaire.getCardInGrounds().length > 0) {
+      console.log(isEmptyPick);
+      console.log(isEmptyStore);
+      if (!this.auto_complete && this.solitaire.getCardInGrounds().length > 0) {
         this.auto_complete = true;
         this.active_auto_complete = false;
       }
-      console.log(isStop ? "no auto complete" : "auto complete");
+      console.log("auto complete");
     }
+    console.log(this.auto_complete);
+    console.log(this.active_auto_complete);
+    // if (this.active_auto_complete) {
+    //   AUTO_COMPLETE().remove();
+    // }
   }
 
   isEmptyDeck() {

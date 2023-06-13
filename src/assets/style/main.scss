@@ -211,7 +211,7 @@ body {
       flex: 1;
 
       #ground {
-        // height: 60vh;
+        height: 60vh;
         // max-height: 400px;
         display: flex;
         gap: 3vw;
@@ -220,6 +220,7 @@ body {
         flex: 1;
         @media (max-width: 768px) {
           gap: 1.8vw;
+          height: 40vh;
           // min-height: 350px;
         }
 
@@ -236,8 +237,8 @@ body {
     .empty {
       font-size: calc(4vw * 0.25);
       overflow: hidden;
-      width: calc(7vw + 1vh);
-      height: calc(7vw * 1.5 + 1vh);
+      width: calc(5vw + 1vh);
+      height: calc(5vw * 1.5 + 1vh);
       border: 1px solid #ccc;
       border-radius: 0.5rem;
       -webkit-border-radius: 0.5rem;

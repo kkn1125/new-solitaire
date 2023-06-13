@@ -33,6 +33,7 @@ export default class EventManager {
     const target = e.target as HTMLButtonElement;
 
     if (target.id !== "auto-complete") return;
+    
     this.renderer.active_auto_complete = true;
     this.renderer.auto_complete = false;
     target.remove();
@@ -44,23 +45,26 @@ export default class EventManager {
         const columnLast = column.slice(-1)[0];
         if (columnLast) {
           const stack = self.solitaire.stack[columnLast.type as OnlyUsableCard];
-          if (stack.length === 0) {
+          if (stack.length === 0 && column.slice(-1)[0].number === 1) {
             const card = column.splice(-1)[0];
             card.updateColumn(-1);
             card.updateState("stack");
             stack.push(card);
             self.renderer.update();
-          } else if (stack.slice(-1)[0].number + 1 === columnLast.number) {
+          } else if (
+            stack.slice(-1)[0] &&
+            stack.slice(-1)[0].number + 1 === columnLast.number
+          ) {
             const card = column.splice(-1)[0];
             card.updateColumn(-1);
             card.updateState("stack");
             stack.push(card);
             self.renderer.update();
           } else {
-            return;
+            continue;
           }
         } else {
-          return;
+          continue;
         }
       }
 
@@ -85,9 +89,7 @@ export default class EventManager {
   handleRestartGame(e: MouseEvent) {
     const target = e.target as HTMLButtonElement;
     if (target.id === "restart") {
-      this.solitaire.regame();
-      this.renderer.render();
-      this.renderer.soundShuffle();
+      this.renderer.regame();
     }
   }
 
