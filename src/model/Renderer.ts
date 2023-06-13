@@ -242,8 +242,8 @@ export default class Renderer {
       .getCardInDecks()
       .every((card) => card.isOpen);
     if (isOpenInDeck && isEmptyPick && isEmptyStore) {
-      console.log(isEmptyPick);
-      console.log(isEmptyStore);
+      // console.log(isEmptyPick);
+      // console.log(isEmptyStore);
       if (
         !this.active_auto_complete &&
         !this.auto_complete &&
@@ -254,8 +254,8 @@ export default class Renderer {
       }
       console.log("auto complete");
     }
-    console.log(this.auto_complete);
-    console.log(this.active_auto_complete);
+    // console.log(this.auto_complete);
+    // console.log(this.active_auto_complete);
     // if (this.active_auto_complete) {
     //   AUTO_COMPLETE().remove();
     // }
