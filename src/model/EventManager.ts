@@ -227,12 +227,20 @@ export default class EventManager {
                   selector[0][0],
                   selector[1]
                 );
-                if (isStackable) {
-                  console.log("good");
-                  this.solitaire.moveToColumn(selector[0], selector[1].column);
-                  this.renderer.soundPick();
-                } else {
-                  console.log("bad");
+                if (
+                  Array.from(cardEl.parentElement.children).slice(-1)[0] ===
+                  cardEl
+                ) {
+                  if (isStackable) {
+                    console.log("good");
+                    this.solitaire.moveToColumn(
+                      selector[0],
+                      selector[1].column
+                    );
+                    this.renderer.soundPick();
+                  } else {
+                    console.log("bad");
+                  }
                 }
 
                 this.solitaire.clearSelector();
