@@ -173,55 +173,98 @@ body {
 
 body {
   position: relative;
-  background-image: url("/images/background1.jpg");
+
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
 
+  $num: 1;
+
+  @for $num from 1 to 8 {
+    &.theme-#{$num} {
+      background-image: url("/images/background#{$num}.jpg");
+    }
+  }
+
   #app {
-    #options {
+    #top-bar {
+      margin-top: 1rem;
+      margin-bottom: 3rem;
       display: flex;
       justify-content: center;
-      // text-align: center;
-      margin-top: 1rem;
+      align-items: center;
       gap: 1rem;
 
-      .shape {
+      #theme {
+        position: relative;
+        font-size: 0.5rem;
+        width: 45px;
+        height: 45px;
+        padding: 0.5rem;
+        text-align: center;
         background-color: #ffffff56;
-        padding: 0.3rem 0.8rem;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        @include border-radius(9999);
 
-        @include border-radius(0.3);
-      }
+        &:hover {
+          box-shadow: 0 0 0 0.3rem #e65e2d7a;
+        }
+        &:active {
+          filter: brightness(0.85);
+          -webkit-filter: brightness(0.85);
+        }
 
-      #timer {
-        display: inline-block;
-        text-align: center;
-        &::before {
-          content: "TIME";
-          display: block;
-          font-weight: 700;
-        }
+        transition: 150ms ease-in-out;
+        -webkit-transition: 150ms ease-in-out;
+        -moz-transition: 150ms ease-in-out;
+        -ms-transition: 150ms ease-in-out;
+        -o-transition: 150ms ease-in-out;
       }
-      #score {
-        text-align: center;
-        &::before {
-          content: "SCORE";
-          display: block;
-          font-weight: 700;
+      #options {
+        display: flex;
+        justify-content: center;
+        // text-align: center;
+        gap: 1rem;
+
+        .shape {
+          background-color: #ffffff56;
+          padding: 0.3rem 0.8rem;
+
+          @include border-radius(0.3);
         }
-        &::after {
-          content: attr(data-game-score);
+
+        #timer {
+          display: inline-block;
+          text-align: center;
+          &::before {
+            content: "TIME";
+            display: block;
+            font-weight: 700;
+          }
         }
-      }
-      #move {
-        text-align: center;
-        &::before {
-          content: "MOVE";
-          display: block;
-          font-weight: 700;
+        #score {
+          text-align: center;
+          &::before {
+            content: "SCORE";
+            display: block;
+            font-weight: 700;
+          }
+          &::after {
+            content: attr(data-game-score);
+          }
         }
-        &::after {
-          content: attr(data-game-move);
+        #move {
+          text-align: center;
+          &::before {
+            content: "MOVE";
+            display: block;
+            font-weight: 700;
+          }
+          &::after {
+            content: attr(data-game-move);
+          }
         }
       }
     }

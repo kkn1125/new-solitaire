@@ -1,6 +1,16 @@
 import { CARD_ENV } from "../util/global";
 import Card from "./Card";
 
+const themes = [
+  "theme-1",
+  "theme-2",
+  "theme-3",
+  "theme-4",
+  "theme-5",
+  "theme-6",
+  "theme-7",
+];
+
 type GameMode = "development" | "production";
 
 interface Options {
@@ -37,6 +47,9 @@ export default class Solitaire {
 
   compareDeck: [number, number] = [0, 0];
 
+  themeIndex: number = 0;
+  currentTheme: string = themes[0];
+
   constructor(options: Options) {
     if (typeof options.mode === "number") {
       this.mode = options.mode ? "development" : "production";
@@ -51,6 +64,15 @@ export default class Solitaire {
     }
     this.#deckToStore();
     // console.log(this.store);
+  }
+
+  randomTheme() {
+    this.currentTheme = themes[Math.floor(themes.length * Math.random())];
+  }
+
+  nextTheme() {
+    this.themeIndex += 1;
+    this.currentTheme = themes[this.themeIndex % themes.length];
   }
 
   countUpScore() {

@@ -13,6 +13,7 @@ import {
 import { formatFromCountdown } from "../util/tool";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
+import icons from "../../public/icon/icons";
 
 const isDesktop = () => innerWidth > 768;
 const useImage = () => false || isDesktop();
@@ -76,10 +77,16 @@ export default class Renderer {
 
   layout() {
     APP.innerHTML = `
-      <div id="options">
-        <div id="score" class="shape" data-game-score="0"></div>
-        <div id="timer" class="shape"></div>
-        <div id="move" class="shape" data-game-move="0"></div>
+      <div id="top-bar">
+        <div></div>
+        <div id="options">
+          <div id="score" class="shape" data-game-score="0"></div>
+          <div id="timer" class="shape"></div>
+          <div id="move" class="shape" data-game-move="0"></div>
+        </div>
+        <button id="theme">
+          ${icons.palette.outerHTML}
+        </button>
       </div>
       <div id="wrapper">
 
@@ -206,6 +213,7 @@ export default class Renderer {
   }
 
   update() {
+    this.theme();
     this.ground();
     this.pick();
     this.stack();
@@ -219,6 +227,13 @@ export default class Renderer {
       }
     }
     this.isWin();
+  }
+
+  theme() {
+    document.body.classList.forEach((cls) =>
+      document.body.classList.remove(cls)
+    );
+    document.body.classList.add(this.solitaire.currentTheme);
   }
 
   move() {

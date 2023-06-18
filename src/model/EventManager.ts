@@ -17,7 +17,19 @@ export default class EventManager {
     window.addEventListener("click", this.handleSelectCard.bind(this));
     window.addEventListener("click", this.handleDeckToPick.bind(this));
     window.addEventListener("click", this.handleRestartGame.bind(this));
+    window.addEventListener("click", this.handleRandomTheme.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
+  }
+
+  handleRandomTheme(e: MouseEvent) {
+    const target = e.target as HTMLButtonElement;
+    const closest = target.closest("#theme");
+
+    if (closest && closest.id === "theme") {
+      // this.solitaire.randomTheme();
+      this.solitaire.nextTheme();
+      this.renderer.update();
+    }
   }
 
   removeAllListeners() {
