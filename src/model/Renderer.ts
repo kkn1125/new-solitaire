@@ -4,7 +4,9 @@ import {
   CARD_ENV,
   DECK,
   GROUND,
+  MOVE,
   PICK,
+  SCORE,
   STACK,
   TIMER,
 } from "../util/global";
@@ -75,10 +77,9 @@ export default class Renderer {
   layout() {
     APP.innerHTML = `
       <div id="options">
-        <div id="score" class="shape" data-game-score="0">
-        
-        </div>
+        <div id="score" class="shape" data-game-score="0"></div>
         <div id="timer" class="shape"></div>
+        <div id="move" class="shape" data-game-move="0"></div>
       </div>
       <div id="wrapper">
 
@@ -209,6 +210,8 @@ export default class Renderer {
     this.pick();
     this.stack();
     this.isEmptyDeck();
+    this.move();
+    this.score();
     this.checkAutoStack();
     if (!this.active_auto_complete) {
       if (this.auto_complete && !AUTO_COMPLETE()) {
@@ -216,6 +219,13 @@ export default class Renderer {
       }
     }
     this.isWin();
+  }
+
+  move() {
+    MOVE().dataset.gameMove = this.solitaire.move.toString();
+  }
+  score() {
+    SCORE().dataset.gameScore = this.solitaire.score.toString();
   }
 
   isWin() {

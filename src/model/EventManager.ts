@@ -163,6 +163,7 @@ export default class EventManager {
           (child) => child === column
         );
         console.log("good");
+        this.solitaire.countUpMove();
         this.solitaire.moveToColumn(selector[0], index);
         this.renderer.update();
         this.renderer.soundPick();
@@ -196,8 +197,25 @@ export default class EventManager {
                   this.solitaire.clearSelector();
                   card.selected = false;
                   cardEl.classList.remove("selected");
+                  this.solitaire.countUpScore();
+
                   this.renderer.update();
                   this.renderer.soundPick();
+
+                  if (this.solitaire.getCardInStacks().length > 0) {
+                    if (
+                      this.solitaire.compareDeck[0] <
+                      this.solitaire.getCardInStacks().length
+                    ) {
+                      this.solitaire.compareDeck[0] =
+                        this.solitaire.getCardInStacks().length;
+                      this.solitaire.compareDeck[1] =
+                        this.solitaire.compareDeck[0];
+                    } else {
+                      this.solitaire.compareDeck[1] =
+                        this.solitaire.getCardInStacks().length;
+                    }
+                  }
                   return;
                 }
 
@@ -232,6 +250,7 @@ export default class EventManager {
                 ) {
                   if (isStackable) {
                     console.log("good");
+                    this.solitaire.countUpMove();
                     this.solitaire.moveToColumn(
                       selector[0],
                       selector[1].column

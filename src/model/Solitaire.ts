@@ -32,6 +32,11 @@ export default class Solitaire {
   };
   ground: Card[][] = [[], [], [], [], [], [], []];
 
+  score: number = 0;
+  move: number = 0;
+
+  compareDeck: [number, number] = [0, 0];
+
   constructor(options: Options) {
     if (typeof options.mode === "number") {
       this.mode = options.mode ? "development" : "production";
@@ -46,6 +51,13 @@ export default class Solitaire {
     }
     this.#deckToStore();
     // console.log(this.store);
+  }
+
+  countUpScore() {
+    this.score += 1;
+  }
+  countUpMove() {
+    this.move += 1;
   }
 
   regame() {
@@ -67,6 +79,8 @@ export default class Solitaire {
       clover: [],
     };
     this.ground = [[], [], [], [], [], [], []];
+    this.score = 0;
+    this.move = 0;
     this.#initDeck();
     if (this.mode === "development") {
       this.#deckToGroundTest();

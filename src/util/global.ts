@@ -39,6 +39,8 @@ export const DECK = () => document.querySelector("#deck") as HTMLDivElement;
 export const RESTART = () =>
   document.querySelector("#restart") as HTMLDivElement;
 export const TIMER = () => document.querySelector("#timer") as HTMLDivElement;
+export const MOVE = () => document.querySelector("#move") as HTMLDivElement;
+export const SCORE = () => document.querySelector("#score") as HTMLDivElement;
 
 export const AUTO_COMPLETE = () =>
   document.querySelector("#auto-complete") as HTMLDivElement;

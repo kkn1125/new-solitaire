@@ -195,11 +195,33 @@ body {
 
       #timer {
         display: inline-block;
+        text-align: center;
+        &::before {
+          content: "TIME";
+          display: block;
+          font-weight: 700;
+        }
       }
       #score {
-        display: none;
+        text-align: center;
         &::before {
-          content: "score: " attr(data-game-score);
+          content: "SCORE";
+          display: block;
+          font-weight: 700;
+        }
+        &::after {
+          content: attr(data-game-score);
+        }
+      }
+      #move {
+        text-align: center;
+        &::before {
+          content: "MOVE";
+          display: block;
+          font-weight: 700;
+        }
+        &::after {
+          content: attr(data-game-move);
         }
       }
     }
