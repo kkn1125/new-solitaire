@@ -8,7 +8,7 @@ import {
   STACK,
   TIMER,
 } from "../util/global";
-import { format, formatFromCountdown } from "../util/tool";
+import { formatFromCountdown } from "../util/tool";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
 
@@ -59,22 +59,27 @@ export default class Renderer {
 
   startTimer(startTime: number) {
     this.timer = setInterval(() => {
-      const form = formatFromCountdown((startTime += 0.001));
+      const form = formatFromCountdown((startTime += 0.1));
       let count = 9;
-      let loop = setInterval(() => {
-        if (count === 0) {
-          clearTimeout(loop);
-        }
-        TIMER().innerHTML = `${form}${count}`;
-        count--;
-      }, 1);
-      TIMER().innerHTML = `${form}0`;
-    }, 10);
+      // let loop = setInterval(() => {
+      //   if (count === 0) {
+      //     clearTimeout(loop);
+      //   }
+      //   TIMER().innerHTML = `${form}${count}`;
+      //   count--;
+      // }, 1);
+      TIMER().innerHTML = `${form}`;
+    }, 1000 /* 10 */);
   }
 
   layout() {
     APP.innerHTML = `
-      <!-- <div id="timer"></div> -->
+      <div id="options">
+        <div id="score" class="shape" data-game-score="0">
+        
+        </div>
+        <div id="timer" class="shape"></div>
+      </div>
       <div id="wrapper">
 
         <div id="top">
@@ -85,9 +90,12 @@ export default class Renderer {
               <div class="back"></div>
             </div>
 
+            
             <div id="pick">
               <div class="empty"></div>
             </div>
+            
+            <div class="gap"></div>
           </div>
 
           <div id="stack">
@@ -108,6 +116,8 @@ export default class Renderer {
           </div>
 
         </div>
+
+
         <div id="body">
         
           <div id="ground">
@@ -167,10 +177,8 @@ export default class Renderer {
     const empty = `<div class="empty"></div>`;
     const el = (type: OnlyUsableCard) =>
       STACK().querySelector(`#${type}-stack`);
-    // console.log(stacks);
     if (Object.entries(stacks).some((typeStack) => typeStack[1].length > 0)) {
       Object.entries(stacks).forEach(([type, cards]) => {
-        // console.log(type, cards);
         el(type as OnlyUsableCard).innerHTML = empty;
         cards.forEach((card, order) => {
           el(card.type as OnlyUsableCard).innerHTML += this.stackCardForm(
@@ -192,7 +200,7 @@ export default class Renderer {
 
   render() {
     this.layout();
-    // this.renderTimer();
+    this.renderTimer();
     this.update();
   }
 
@@ -202,7 +210,6 @@ export default class Renderer {
     this.stack();
     this.isEmptyDeck();
     this.checkAutoStack();
-    // console.log(this.auto_complete);
     if (!this.active_auto_complete) {
       if (this.auto_complete && !AUTO_COMPLETE()) {
         APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
@@ -228,11 +235,11 @@ export default class Renderer {
   }
 
   regame() {
+    this.auto_complete = false;
+    this.active_auto_complete = false;
     this.solitaire.regame();
     this.render();
     this.soundShuffle();
-    this.auto_complete = false;
-    this.active_auto_complete = false;
   }
 
   checkAutoStack() {
@@ -242,8 +249,6 @@ export default class Renderer {
       .getCardInGrounds()
       .every((card) => card.isOpen);
     if (isOpenInGround && isEmptyPick && isEmptyStore) {
-      // console.log(isEmptyPick);
-      // console.log(isEmptyStore);
       if (
         !this.active_auto_complete &&
         !this.auto_complete &&
@@ -254,11 +259,6 @@ export default class Renderer {
       }
       console.log("auto complete");
     }
-    // console.log(this.auto_complete);
-    // console.log(this.active_auto_complete);
-    // if (this.active_auto_complete) {
-    //   AUTO_COMPLETE().remove();
-    // }
   }
 
   isEmptyDeck() {
@@ -267,6 +267,12 @@ export default class Renderer {
     } else {
       DECK().querySelector(".back").classList.remove("zero");
     }
+
+    const inPick = this.solitaire.getCardInPicks().length;
+    const inDeck = this.solitaire.getCardInDecks().length + inPick;
+
+    DECK().dataset.pickLen = inPick.toString();
+    DECK().dataset.storeLen = inDeck.toString();
   }
 
   stackCardForm(card: Card, order: number) {

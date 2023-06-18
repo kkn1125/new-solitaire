@@ -9,7 +9,9 @@ import Solitaire from "./model/Solitaire";
 */
 const MODE = 0;
 
-const game = new Solitaire(MODE);
+const game = new Solitaire({
+  mode: 0,
+});
 const renderer = new Renderer(game);
 const eventManager = new EventManager(game, renderer);
 

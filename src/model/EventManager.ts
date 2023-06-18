@@ -1,4 +1,3 @@
-import { APP, pickSound, RESTART } from "../util/global";
 import Card from "./Card";
 import Renderer from "./Renderer";
 import Solitaire from "./Solitaire";

@@ -2,6 +2,11 @@ import { CARD_ENV } from "../util/global";
 import Card from "./Card";
 
 type GameMode = "development" | "production";
+
+interface Options {
+  mode: GameMode | number;
+}
+
 export default class Solitaire {
   empty: Card = new Card("empty", 0);
   back: Card = new Card("back", 0);
@@ -27,11 +32,11 @@ export default class Solitaire {
   };
   ground: Card[][] = [[], [], [], [], [], [], []];
 
-  constructor(mode?: GameMode | number) {
-    if (typeof mode === "number") {
-      this.mode = mode ? "development" : "production";
+  constructor(options: Options) {
+    if (typeof options.mode === "number") {
+      this.mode = options.mode ? "development" : "production";
     } else {
-      this.mode = mode || "development";
+      this.mode = options.mode || "development";
     }
     this.#initDeck();
     if (this.mode === "development") {

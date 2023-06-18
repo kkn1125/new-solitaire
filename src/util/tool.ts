@@ -43,5 +43,8 @@ export const formatFromCountdown = (countdown: number) => {
   const second = Math.floor(countdown * 10) % 60;
   const milliSecond = Math.floor(countdown * 1000) % 100;
 
-  return `${minute}:${second}.${milliSecond.toString().padStart(2, "0")}`;
+  return `${minute.toString().padStart(2, "0")}:${second
+    .toString()
+    .padStart(2, "0")}`;
+  // .${milliSecond.toString().padStart(2, "0")}
 };
