@@ -253,34 +253,8 @@ export default class Renderer {
   }
 
   startBgm() {
-    this.solitaire.bgmList = this.solitaire.bgmList.map((bgm) => {
-      bgm.active = false;
-      bgm.audio.pause();
-      bgm.audio.volume = 0;
-      bgm.audio.currentTime = 0;
-      return bgm;
-    });
-    const bgm =
-      this.solitaire.bgmList[
-        Math.floor(this.solitaire.bgmList.length * Math.random())
-      ];
-    if (bgm) {
-      bgm.active = true;
-      bgm.audio.volume = 0.3;
-      bgm.audio.onended = () => {
-        bgm.active = false;
-        bgm.audio.volume = 0;
-        bgm.audio.pause();
-        bgm.audio.muted = true;
-        const next =
-          this.solitaire.bgmList[(bgm.id - 1) % this.solitaire.bgmList.length];
-        next.active = true;
-        next.audio.muted = false;
-        next.audio.volume = 0.3;
-        next.audio.play();
-        bgm.audio.onended = null;
-      };
-    }
+    this.solitaire.clearBgm();
+    this.solitaire.randomBgm();
   }
 
   effect() {
@@ -301,11 +275,9 @@ export default class Renderer {
     } else {
       BGM().classList.remove("not-use");
       const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
-      console.log(bgm);
       // bgm.active = false;
       bgm.audio.muted = false;
       bgm.audio.play();
-      console.log(bgm.audio.src);
     }
   }
 
@@ -432,7 +404,7 @@ export default class Renderer {
       (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.pick
     );
     audio.currentTime = 0.02;
-    audio.volume = 0.7;
+    audio.volume = 0.6;
     audio.play();
   }
 

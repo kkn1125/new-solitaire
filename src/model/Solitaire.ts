@@ -48,6 +48,7 @@ export default class Solitaire {
         (import.meta.env.DEV ? "/new-solitaire" : "/new-solitaire") + bgm
       );
 
+      audio.volume = 0.25;
       audio.autoplay = true;
       audio.muted = true;
 
@@ -71,21 +72,30 @@ export default class Solitaire {
       this.#deckToGround();
     }
     this.#deckToStore();
-    // console.log(this.store);
 
     this.bgmList.forEach((bgm) => {
-      // bgm.audio.onended = () => {
-      //   bgm.active = false;
-      //   bgm.audio.muted = false;
-      //   bgm.audio.pause();
-      //   const filtered = this.bgmList.filter((bg) => bg.id !== bgm.id);
-      //   const random = filtered[Math.floor(filtered.length * Math.random())];
-      //   random.active = true;
-      //   random.audio.volume = 0.3;
-      //   random.audio.muted = false;
-      //   random.audio.play();
-      // };
+      bgm.audio.onended = () => {
+        this.randomBgm();
+      };
     });
+  }
+
+  clearBgm() {
+    this.bgmList.forEach((bgm) => {
+      bgm.active = false;
+      bgm.audio.currentTime = 0;
+      bgm.audio.muted = true;
+      bgm.audio.pause();
+    });
+  }
+
+  randomBgm() {
+    const bgm = this.bgmList[Math.floor(this.bgmList.length * Math.random())];
+    bgm.active = true;
+    bgm.audio.muted = false;
+    if (this.bgm) {
+      bgm.audio.play();
+    }
   }
 
   randomTheme() {
