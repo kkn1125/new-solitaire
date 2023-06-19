@@ -41,7 +41,7 @@ export default class Solitaire {
   currentTheme: string = themes[0];
 
   effect: boolean = true;
-  bgm: boolean = true;
+  bgm: boolean = false;
   bgmList: { id: number; active: boolean; audio: HTMLAudioElement }[] =
     bgmSounds.map((bgm, i) => {
       const audio = new Audio(
