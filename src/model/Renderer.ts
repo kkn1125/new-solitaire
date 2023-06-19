@@ -99,13 +99,7 @@ export default class Renderer {
       </div>
       <div class="slide-bgm">
         <!--<span>
-        ${
-          this.solitaire.bgmList
-            .find((bgm) => bgm.active)
-            .audio.src.split(/daehanghaesidae_/g)[1]
-            .replace(/_/g, " ")
-            .split(".")[0]
-        }
+        
         </span>-->
       </div>
       <div id="wrapper">
@@ -253,8 +247,10 @@ export default class Renderer {
   }
 
   startBgm() {
-    this.solitaire.clearBgm();
-    this.solitaire.randomBgm();
+    if (this.solitaire.bgm) {
+      this.solitaire.bgmList.play();
+    }
+    // this.solitaire.randomBgm();
   }
 
   effect() {
@@ -268,16 +264,16 @@ export default class Renderer {
   toggleBgm() {
     if (!this.solitaire.bgm && !BGM().classList.contains(".not-use")) {
       BGM().classList.add("not-use");
-      const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
+      // const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
       // bgm.active = false;
-      bgm.audio.muted = true;
-      bgm.audio.pause();
+      this.solitaire.bgmList.muted = true;
+      this.solitaire.bgmList.pause();
     } else {
       BGM().classList.remove("not-use");
-      const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
+      // const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
       // bgm.active = false;
-      bgm.audio.muted = false;
-      bgm.audio.play();
+      this.solitaire.bgmList.muted = false;
+      this.solitaire.bgmList.play();
     }
   }
 

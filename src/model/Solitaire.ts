@@ -42,22 +42,7 @@ export default class Solitaire {
 
   effect: boolean = true;
   bgm: boolean = false;
-  bgmList: { id: number; active: boolean; audio: HTMLAudioElement }[] =
-    bgmSounds.map((bgm, i) => {
-      const audio = new Audio(
-        (import.meta.env.DEV ? "/new-solitaire" : "/new-solitaire") + bgm
-      );
-
-      audio.volume = 0.25;
-      audio.autoplay = true;
-      audio.muted = true;
-
-      return {
-        id: i,
-        active: false,
-        audio: audio,
-      };
-    });
+  bgmList: HTMLAudioElement /* : { id: number; active: boolean; audio: HTMLAudioElement }[] */;
 
   constructor(options: Options) {
     if (typeof options.mode === "number") {
@@ -73,30 +58,35 @@ export default class Solitaire {
     }
     this.#deckToStore();
 
-    this.bgmList.forEach((bgm) => {
-      bgm.audio.onended = () => {
-        this.randomBgm();
-      };
+    this.bgmList = new Audio();
+
+    bgmSounds.forEach((bgm) => {
+      const source = document.createElement("source");
+      source.src = (import.meta.env.DEV ? "" : "/new-solitaire") + bgm;
+      this.bgmList.append(source);
     });
+
+    this.bgmList.loop = true;
+    this.bgmList.muted = true;
+    this.bgmList.volume = 0.25;
+    this.bgmList.autoplay = true;
+
+    console.log(this.bgmList);
   }
 
-  clearBgm() {
-    this.bgmList.forEach((bgm) => {
-      bgm.active = false;
-      bgm.audio.currentTime = 0;
-      bgm.audio.muted = true;
-      bgm.audio.pause();
-    });
-  }
-
-  randomBgm() {
-    const bgm = this.bgmList[Math.floor(this.bgmList.length * Math.random())];
-    bgm.active = true;
-    bgm.audio.muted = false;
-    if (this.bgm) {
-      bgm.audio.play();
-    }
-  }
+  // randomBgm() {
+  //   // this.bgmList[this.bgmList.length]
+  //   const source = (
+  //     this.bgmList.children[
+  //       Math.floor(this.bgmList.children.length * Math.random())
+  //     ] as HTMLSourceElement
+  //   ).src;
+  //   // bgm.active = true;
+  //   // bgm.audio.muted = false;
+  //   if (this.bgm) {
+  //     this.bgmList.play();
+  //   }
+  // }
 
   randomTheme() {
     this.currentTheme = themes[Math.floor(themes.length * Math.random())];
