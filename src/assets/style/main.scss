@@ -1,3 +1,39 @@
+@mixin disabled($comment) {
+  &.not-use::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0px;
+    border-top: 3px solid red;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+  }
+  &.not-use:hover::before {
+    content: "NOT #{$comment}";
+  }
+}
+
+@mixin bottom-comment($comment) {
+  &:hover::before {
+    content: "#{$comment}";
+    font-size: 0.8rem;
+    background-color: #00000056;
+    position: absolute;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+  }
+}
+
 @mixin card-size($scale) {
   width: ($scale * 8) + vw;
   height: ($scale * 11.3) + vw;
@@ -186,6 +222,10 @@ body {
     }
   }
 
+  .slide-bgm {
+    
+  }
+
   #app {
     #top-bar {
       margin-top: 1rem;
@@ -195,9 +235,12 @@ body {
       align-items: center;
       gap: 1rem;
 
-      #theme {
+      .top-circle-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.4rem;
         position: relative;
-        font-size: 0.5rem;
         width: 45px;
         height: 45px;
         padding: 0.5rem;
@@ -207,7 +250,30 @@ body {
         border: none;
         cursor: pointer;
         @include border-radius(9999);
+        &:hover {
+          box-shadow: 0 0 0 0.3rem #e65e2d7a;
+        }
+        &:active {
+          filter: brightness(0.85);
+          -webkit-filter: brightness(0.85);
+        }
+      }
 
+      #bgm {
+        @include bottom-comment("BGM");
+        @include disabled("BGM");
+      }
+
+      #effect {
+        @include bottom-comment("EFFECT");
+        @include disabled("EFFECT");
+      }
+
+      #theme {
+        svg {
+          width: 25px;
+          height: 25px;
+        }
         &:hover {
           box-shadow: 0 0 0 0.3rem #e65e2d7a;
         }
@@ -221,6 +287,7 @@ body {
         -moz-transition: 150ms ease-in-out;
         -ms-transition: 150ms ease-in-out;
         -o-transition: 150ms ease-in-out;
+        @include bottom-comment("THEME");
       }
       #options {
         display: flex;

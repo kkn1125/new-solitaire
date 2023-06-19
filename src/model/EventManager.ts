@@ -18,7 +18,29 @@ export default class EventManager {
     window.addEventListener("click", this.handleDeckToPick.bind(this));
     window.addEventListener("click", this.handleRestartGame.bind(this));
     window.addEventListener("click", this.handleRandomTheme.bind(this));
+    window.addEventListener("click", this.handleToggleEffect.bind(this));
+    window.addEventListener("click", this.handleToggleBGm.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
+  }
+
+  handleToggleEffect(e: MouseEvent) {
+    const target = e.target as HTMLButtonElement;
+    const closest = target.closest("#effect");
+
+    if (closest && closest.id === "effect") {
+      this.solitaire.effect = !this.solitaire.effect;
+      this.renderer.update();
+    }
+  }
+
+  handleToggleBGm(e: MouseEvent) {
+    const target = e.target as HTMLButtonElement;
+    const closest = target.closest("#bgm");
+
+    if (closest && closest.id === "bgm") {
+      this.solitaire.bgm = !this.solitaire.bgm;
+      this.renderer.update();
+    }
   }
 
   handleRandomTheme(e: MouseEvent) {

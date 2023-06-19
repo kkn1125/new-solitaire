@@ -1,8 +1,11 @@
 import {
   APP,
   AUTO_COMPLETE,
+  BGM,
   CARD_ENV,
   DECK,
+  EFFECT,
+  effectSounds,
   GROUND,
   MOVE,
   PICK,
@@ -84,9 +87,26 @@ export default class Renderer {
           <div id="timer" class="shape"></div>
           <div id="move" class="shape" data-game-move="0"></div>
         </div>
-        <button id="theme">
+        <button id="theme" class="top-circle-btn">
           ${icons.palette.outerHTML}
         </button>
+        <button id="effect" class="top-circle-btn">
+          🃏
+        </button>
+        <button id="bgm" class="top-circle-btn">
+          🔊
+        </button>
+      </div>
+      <div class="slide-bgm">
+        <!--<span>
+        ${
+          this.solitaire.bgmList
+            .find((bgm) => bgm.active)
+            .audio.src.split(/daehanghaesidae_/g)[1]
+            .replace(/_/g, " ")
+            .split(".")[0]
+        }
+        </span>-->
       </div>
       <div id="wrapper">
 
@@ -207,6 +227,7 @@ export default class Renderer {
   }
 
   render() {
+    this.startBgm();
     this.layout();
     this.renderTimer();
     this.update();
@@ -220,6 +241,8 @@ export default class Renderer {
     this.isEmptyDeck();
     this.move();
     this.score();
+    this.effect();
+    this.toggleBgm();
     this.checkAutoStack();
     if (!this.active_auto_complete) {
       if (this.auto_complete && !AUTO_COMPLETE()) {
@@ -227,6 +250,63 @@ export default class Renderer {
       }
     }
     this.isWin();
+  }
+
+  startBgm() {
+    this.solitaire.bgmList = this.solitaire.bgmList.map((bgm) => {
+      bgm.active = false;
+      bgm.audio.pause();
+      bgm.audio.volume = 0;
+      bgm.audio.currentTime = 0;
+      return bgm;
+    });
+    const bgm =
+      this.solitaire.bgmList[
+        Math.floor(this.solitaire.bgmList.length * Math.random())
+      ];
+    if (bgm) {
+      bgm.active = true;
+      bgm.audio.volume = 0.3;
+      bgm.audio.onended = () => {
+        bgm.active = false;
+        bgm.audio.volume = 0;
+        bgm.audio.pause();
+        bgm.audio.muted = true;
+        const next =
+          this.solitaire.bgmList[(bgm.id - 1) % this.solitaire.bgmList.length];
+        next.active = true;
+        next.audio.muted = false;
+        next.audio.volume = 0.3;
+        next.audio.play();
+        bgm.audio.onended = null;
+      };
+    }
+  }
+
+  effect() {
+    if (!this.solitaire.effect && !EFFECT().classList.contains(".not-use")) {
+      EFFECT().classList.add("not-use");
+    } else {
+      EFFECT().classList.remove("not-use");
+    }
+  }
+
+  toggleBgm() {
+    if (!this.solitaire.bgm && !BGM().classList.contains(".not-use")) {
+      BGM().classList.add("not-use");
+      const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
+      // bgm.active = false;
+      bgm.audio.muted = true;
+      bgm.audio.pause();
+    } else {
+      BGM().classList.remove("not-use");
+      const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
+      console.log(bgm);
+      // bgm.active = false;
+      bgm.audio.muted = false;
+      bgm.audio.play();
+      console.log(bgm.audio.src);
+    }
   }
 
   theme() {
@@ -239,6 +319,7 @@ export default class Renderer {
   move() {
     MOVE().dataset.gameMove = this.solitaire.move.toString();
   }
+
   score() {
     SCORE().dataset.gameScore = this.solitaire.score.toString();
   }
@@ -346,20 +427,24 @@ export default class Renderer {
   }
 
   soundPick() {
-    var audio = new Audio(
-      (import.meta.env.DEV ? "" : "/new-solitaire") + "/sounds/pick_sound.mp4"
+    if (!this.solitaire.effect) return;
+    const audio = new Audio(
+      (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.pick
     );
-    audio.currentTime = 0.05;
+    audio.currentTime = 0.02;
     audio.volume = 0.7;
     audio.play();
   }
+
   soundShuffle() {
-    var audio = new Audio(
-      (import.meta.env.DEV ? "" : "/new-solitaire") +
-        "/sounds/shuffle_sound.mp4"
+    if (!this.solitaire.effect) return;
+    const audio = new Audio(
+      (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.shuffle
     );
     audio.currentTime = 0.01;
     audio.volume = 0.5;
     audio.play();
   }
+
+  playBgm() {}
 }

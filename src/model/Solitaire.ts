@@ -1,15 +1,5 @@
-import { CARD_ENV } from "../util/global";
+import { bgmSounds, CARD_ENV, themes } from "../util/global";
 import Card from "./Card";
-
-const themes = [
-  "theme-1",
-  "theme-2",
-  "theme-3",
-  "theme-4",
-  "theme-5",
-  "theme-6",
-  "theme-7",
-];
 
 type GameMode = "development" | "production";
 
@@ -50,6 +40,24 @@ export default class Solitaire {
   themeIndex: number = 0;
   currentTheme: string = themes[0];
 
+  effect: boolean = true;
+  bgm: boolean = true;
+  bgmList: { id: number; active: boolean; audio: HTMLAudioElement }[] =
+    bgmSounds.map((bgm, i) => {
+      const audio = new Audio(
+        (import.meta.env.DEV ? "/new-solitaire" : "/new-solitaire") + bgm
+      );
+
+      audio.autoplay = true;
+      audio.muted = true;
+
+      return {
+        id: i,
+        active: false,
+        audio: audio,
+      };
+    });
+
   constructor(options: Options) {
     if (typeof options.mode === "number") {
       this.mode = options.mode ? "development" : "production";
@@ -64,6 +72,20 @@ export default class Solitaire {
     }
     this.#deckToStore();
     // console.log(this.store);
+
+    this.bgmList.forEach((bgm) => {
+      // bgm.audio.onended = () => {
+      //   bgm.active = false;
+      //   bgm.audio.muted = false;
+      //   bgm.audio.pause();
+      //   const filtered = this.bgmList.filter((bg) => bg.id !== bgm.id);
+      //   const random = filtered[Math.floor(filtered.length * Math.random())];
+      //   random.active = true;
+      //   random.audio.volume = 0.3;
+      //   random.audio.muted = false;
+      //   random.audio.play();
+      // };
+    });
   }
 
   randomTheme() {

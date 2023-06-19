@@ -41,6 +41,9 @@ export const RESTART = () =>
 export const TIMER = () => document.querySelector("#timer") as HTMLDivElement;
 export const MOVE = () => document.querySelector("#move") as HTMLDivElement;
 export const SCORE = () => document.querySelector("#score") as HTMLDivElement;
+export const THEME = () => document.querySelector("#theme") as HTMLDivElement;
+export const EFFECT = () => document.querySelector("#effect") as HTMLDivElement;
+export const BGM = () => document.querySelector("#bgm") as HTMLDivElement;
 
 export const AUTO_COMPLETE = () =>
   document.querySelector("#auto-complete") as HTMLDivElement;
@@ -54,3 +57,26 @@ export const IMAGE = (filename: string, number: number) =>
 /* sounds */
 export const pickSound = () =>
   document.querySelector("#pick-sound") as HTMLAudioElement;
+
+export const effectSounds = {
+  pick: "/sounds/pick_sound.mp4",
+  shuffle: "/sounds/shuffle_sound.mp4",
+};
+
+export const bgmSounds = [
+  "/bgm/daehanghaesidae_bar.mp4",
+  "/bgm/daehanghaesidae_eastern_mediterranean_sea.mp4",
+  "/bgm/daehanghaesidae_japan.mp4",
+  "/bgm/daehanghaesidae_marseille.mp4",
+];
+
+/* backgrounds */
+export const themes = [
+  "theme-1",
+  "theme-2",
+  "theme-3",
+  "theme-4",
+  "theme-5",
+  "theme-6",
+  "theme-7",
+];
