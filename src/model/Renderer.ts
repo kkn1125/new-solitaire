@@ -1,22 +1,23 @@
+import icons from "../../public/icon/icons";
 import {
   APP,
   AUTO_COMPLETE,
   BGM,
   CARD_ENV,
+  CURRENT_BGM,
   DECK,
   EFFECT,
-  effectSounds,
   GROUND,
   MOVE,
   PICK,
   SCORE,
+  SLIDE,
   STACK,
   TIMER,
 } from "../util/global";
 import { formatFromCountdown } from "../util/tool";
 import Card from "./Card";
 import Solitaire from "./Solitaire";
-import icons from "../../public/icon/icons";
 
 const isDesktop = () => innerWidth > 768;
 const useImage = () => false || isDesktop();
@@ -53,6 +54,7 @@ export default class Renderer {
 
   constructor(solitaire: Solitaire) {
     this.solitaire = solitaire;
+    // this.solitaire.setDetector(this.dpBGM.bind(this));
   }
 
   renderTimer() {
@@ -98,9 +100,9 @@ export default class Renderer {
         </button>
       </div>
       <div class="slide-bgm">
-        <!--<span>
-        
-        </span>-->
+        <span id="current-bgm">
+          
+        </span>
       </div>
       <div id="wrapper">
 
@@ -183,6 +185,15 @@ export default class Renderer {
     `;
   }
 
+  dpBGM() {
+    const bgm = this.solitaire.bgmList.currentSrc?.split("daehanghaesidae_")[1];
+    CURRENT_BGM().style.display = bgm ? "inline-block" : "none";
+    CURRENT_BGM().innerHTML = `<span id="slide">${bgm}</span>` || "";
+    if (SLIDE()) {
+      SLIDE().dataset.content = bgm || "";
+    }
+  }
+
   ground() {
     const ground = this.solitaire.ground;
     return ground.forEach((column, col) => {
@@ -237,6 +248,7 @@ export default class Renderer {
     this.score();
     this.effect();
     this.toggleBgm();
+    this.dpBGM();
     this.checkAutoStack();
     if (!this.active_auto_complete) {
       if (this.auto_complete && !AUTO_COMPLETE()) {
@@ -264,16 +276,10 @@ export default class Renderer {
   toggleBgm() {
     if (!this.solitaire.bgm && !BGM().classList.contains(".not-use")) {
       BGM().classList.add("not-use");
-      // const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
-      // bgm.active = false;
-      this.solitaire.bgmList.muted = true;
-      this.solitaire.bgmList.pause();
+      this.solitaire.bgmOff();
     } else {
       BGM().classList.remove("not-use");
-      // const bgm = this.solitaire.bgmList.find((bgm) => bgm.active);
-      // bgm.active = false;
-      this.solitaire.bgmList.muted = false;
-      this.solitaire.bgmList.play();
+      this.solitaire.bgmStart();
     }
   }
 
@@ -396,22 +402,12 @@ export default class Renderer {
 
   soundPick() {
     if (!this.solitaire.effect) return;
-    const audio = new Audio(
-      (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.pick
-    );
-    audio.currentTime = 0.02;
-    audio.volume = 0.6;
-    audio.play();
+    this.solitaire.pickSound();
   }
 
   soundShuffle() {
     if (!this.solitaire.effect) return;
-    const audio = new Audio(
-      (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.shuffle
-    );
-    audio.currentTime = 0.01;
-    audio.volume = 0.5;
-    audio.play();
+    this.solitaire.shuffleSound();
   }
 
   playBgm() {}

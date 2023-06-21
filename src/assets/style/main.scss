@@ -32,6 +32,21 @@
     -ms-transform: translateX(-50%);
     -o-transform: translateX(-50%);
   }
+  @media (min-width: 0px) and (max-width: 280px) {
+    font-size: 0.6rem;
+    width: 30px;
+    height: 30px;
+  }
+  @media (min-width: 281px) and (max-width: 376px) {
+    font-size: 1rem;
+    width: 35px;
+    height: 35px;
+  }
+  @media (min-width: 377px) and (max-width: 568px) {
+    font-size: 1.2rem;
+    width: 38px;
+    height: 38px;
+  }
 }
 
 @mixin card-size($scale) {
@@ -223,7 +238,161 @@ body {
   }
 
   .slide-bgm {
-    
+    text-align: center;
+
+    // display: flex;
+    // align-items:center;
+
+    #current-bgm #slide {
+      overflow: hidden;
+      display: inline-flex;
+      position: relative;
+      color: transparent;
+      align-items: center;
+      user-select: none;
+
+      @keyframes slide {
+        0% {
+          transform: translateX(100%);
+          -webkit-transform: translateX(100%);
+          -moz-transform: translateX(100%);
+          -ms-transform: translateX(100%);
+          -o-transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+          -webkit-transform: translateX(-100%);
+          -moz-transform: translateX(-100%);
+          -ms-transform: translateX(-100%);
+          -o-transform: translateX(-100%);
+        }
+      }
+
+      @keyframes slide2 {
+        0% {
+          transform: translateX(100%);
+          -webkit-transform: translateX(100%);
+          -moz-transform: translateX(100%);
+          -ms-transform: translateX(100%);
+          -o-transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+          -webkit-transform: translateX(-100%);
+          -moz-transform: translateX(-100%);
+          -ms-transform: translateX(-100%);
+          -o-transform: translateX(-100%);
+        }
+      }
+
+      &::before {
+        color: #ffffff;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        content: attr(data-content);
+        word-break: break-all;
+        animation: slide 10s linear infinite;
+        -webkit-animation: slide 10s linear infinite;
+        white-space: nowrap;
+      }
+      &::after {
+        left: -200%;
+        color: #ffffff;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        content: attr(data-content);
+        word-break: break-all;
+        animation: slide2 10s linear infinite;
+        -webkit-animation: slide2 10s linear infinite;
+        white-space: nowrap;
+      }
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: rotate(-5deg);
+        -webkit-transform: rotate(-5deg);
+        -moz-transform: rotate(-5deg);
+        -ms-transform: rotate(-5deg);
+        -o-transform: rotate(-5deg);
+      }
+      13% {
+        transform: rotate(-10deg);
+        -webkit-transform: rotate(-10deg);
+        -moz-transform: rotate(-10deg);
+        -ms-transform: rotate(-10deg);
+        -o-transform: rotate(-10deg);
+      }
+      26% {
+        transform: rotate(-5deg);
+        -webkit-transform: rotate(-5deg);
+        -moz-transform: rotate(-5deg);
+        -ms-transform: rotate(-5deg);
+        -o-transform: rotate(-5deg);
+      }
+      39% {
+        transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+      }
+      50% {
+        transform: rotate(5deg);
+        -webkit-transform: rotate(5deg);
+        -moz-transform: rotate(5deg);
+        -ms-transform: rotate(5deg);
+        -o-transform: rotate(5deg);
+      }
+      73% {
+        transform: rotate(10deg);
+        -webkit-transform: rotate(10deg);
+        -moz-transform: rotate(10deg);
+        -ms-transform: rotate(10deg);
+        -o-transform: rotate(10deg);
+      }
+      87% {
+        transform: rotate(5deg);
+        -webkit-transform: rotate(5deg);
+        -moz-transform: rotate(5deg);
+        -ms-transform: rotate(5deg);
+        -o-transform: rotate(5deg);
+      }
+      100% {
+        transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+      }
+    }
+
+    #current-bgm:not(:empty) {
+      padding: 0.3rem 0.7rem;
+      background-color: #00000056;
+      color: #ffffff;
+      border-radius: 0.3rem;
+      -webkit-border-radius: 0.3rem;
+      -moz-border-radius: 0.3rem;
+      -ms-border-radius: 0.3rem;
+      -o-border-radius: 0.3rem;
+
+      &::before {
+        content: "🎵";
+        display: inline-block;
+        margin-right: 8px;
+        font-weight: 700;
+        text-shadow: 0 0 0 #ffffff;
+        color: transparent;
+        text-align: center;
+        animation: bounce 1.8s ease-in-out infinite;
+        -webkit-animation: bounce 1.8s ease-in-out infinite;
+      }
+    }
   }
 
   #app {
@@ -234,6 +403,16 @@ body {
       justify-content: center;
       align-items: center;
       gap: 1rem;
+
+      @media (min-width: 0px) and (max-width: 280px) {
+        gap: 0.3rem;
+      }
+      @media (min-width: 281px) and (max-width: 376px) {
+        gap: 0.6rem;
+      }
+      @media (min-width: 377px) and (max-width: 568px) {
+        gap: 0.8rem;
+      }
 
       .top-circle-btn {
         display: flex;
@@ -294,6 +473,19 @@ body {
         justify-content: center;
         // text-align: center;
         gap: 1rem;
+
+        @media (min-width: 0px) and (max-width: 280px) {
+          gap: 0.2rem;
+          font-size: 0.6rem;
+        }
+        @media (min-width: 281px) and (max-width: 376px) {
+          gap: 0.8rem;
+          font-size: 0.8rem;
+        }
+        @media (min-width: 377px) and (max-width: 568px) {
+          gap: 0.8rem;
+          font-size: 0.8rem;
+        }
 
         .shape {
           background-color: #ffffff56;

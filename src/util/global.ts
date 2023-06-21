@@ -44,6 +44,10 @@ export const SCORE = () => document.querySelector("#score") as HTMLDivElement;
 export const THEME = () => document.querySelector("#theme") as HTMLDivElement;
 export const EFFECT = () => document.querySelector("#effect") as HTMLDivElement;
 export const BGM = () => document.querySelector("#bgm") as HTMLDivElement;
+export const CURRENT_BGM = () =>
+  document.querySelector("#current-bgm") as HTMLDivElement;
+export const SLIDE = () =>
+  document.querySelector("#current-bgm > #slide") as HTMLDivElement;
 
 export const AUTO_COMPLETE = () =>
   document.querySelector("#auto-complete") as HTMLDivElement;
@@ -69,6 +73,9 @@ export const bgmSounds = [
   "/bgm/daehanghaesidae_japan.mp4",
   "/bgm/daehanghaesidae_marseille.mp4",
 ];
+
+export const cardPickVolume = 1;
+export const bgmVolume = 0.55;
 
 /* backgrounds */
 export const themes = [

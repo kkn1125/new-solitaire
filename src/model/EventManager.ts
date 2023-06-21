@@ -21,6 +21,24 @@ export default class EventManager {
     window.addEventListener("click", this.handleToggleEffect.bind(this));
     window.addEventListener("click", this.handleToggleBGm.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
+
+    // document.addEventListener("mouseleave", this.handleMouseLeave.bind(this));
+    document.addEventListener("visibilitychange", this.handleTabout.bind(this));
+    window.addEventListener("beforeunload", this.handleBeforeClose.bind(this));
+  }
+
+  // handleMouseLeave(e: MouseEvent) {}
+
+  handleTabout(e: Event) {
+    if (document.hidden) {
+      this.solitaire.bgmOff();
+    } else {
+      this.solitaire.bgmStart();
+    }
+  }
+
+  handleBeforeClose(e: BeforeUnloadEvent) {
+    this.removeAllListeners();
   }
 
   handleToggleEffect(e: MouseEvent) {
@@ -55,10 +73,27 @@ export default class EventManager {
   }
 
   removeAllListeners() {
+    window.removeEventListener("click", this.handleAutoComplete.bind(this));
     window.removeEventListener("click", this.handleSelectCard.bind(this));
     window.removeEventListener("click", this.handleDeckToPick.bind(this));
     window.removeEventListener("click", this.handleRestartGame.bind(this));
+    window.removeEventListener("click", this.handleRandomTheme.bind(this));
+    window.removeEventListener("click", this.handleToggleEffect.bind(this));
+    window.removeEventListener("click", this.handleToggleBGm.bind(this));
     window.removeEventListener("resize", this.handleResize.bind(this));
+
+    // document.removeEventListener(
+    //   "mouseleave",
+    //   this.handleMouseLeave.bind(this)
+    // );
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleTabout.bind(this)
+    );
+    window.removeEventListener(
+      "beforeunload",
+      this.handleBeforeClose.bind(this)
+    );
   }
 
   handleAutoComplete(e: MouseEvent) {

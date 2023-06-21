@@ -1,4 +1,12 @@
-import { bgmSounds, CARD_ENV, themes } from "../util/global";
+import {
+  bgmSounds,
+  bgmVolume,
+  CARD_ENV,
+  CURRENT_BGM,
+  effectSounds,
+  SLIDE,
+  themes,
+} from "../util/global";
 import Card from "./Card";
 
 type GameMode = "development" | "production";
@@ -58,35 +66,80 @@ export default class Solitaire {
     }
     this.#deckToStore();
 
-    this.bgmList = new Audio();
+    this.setBGM();
 
-    bgmSounds.forEach((bgm) => {
-      const source = document.createElement("source");
-      source.src = (import.meta.env.DEV ? "" : "/new-solitaire") + bgm;
-      this.bgmList.append(source);
-    });
-
-    this.bgmList.loop = true;
-    this.bgmList.muted = true;
-    this.bgmList.volume = 0.25;
-    this.bgmList.autoplay = true;
-
-    console.log(this.bgmList);
+    // console.log(this.bgmList);
   }
 
-  // randomBgm() {
-  //   // this.bgmList[this.bgmList.length]
-  //   const source = (
-  //     this.bgmList.children[
-  //       Math.floor(this.bgmList.children.length * Math.random())
-  //     ] as HTMLSourceElement
-  //   ).src;
-  //   // bgm.active = true;
-  //   // bgm.audio.muted = false;
-  //   if (this.bgm) {
-  //     this.bgmList.play();
-  //   }
+  // setDetector(detector: Function) {
+  //   this.detector = detector;
   // }
+
+  setBGM() {
+    this.bgmList = new Audio();
+    this.bgmList.muted = true;
+    this.bgmList.volume = bgmVolume;
+    // this.bgmList.defaultPlaybackRate = 5;
+    this.setRandomBgm();
+
+    this.bgmList.addEventListener(
+      "ended",
+      (() => {
+        this.setRandomBgm();
+      }).bind(this)
+    );
+  }
+
+  bgmStart() {
+    this.bgmList.muted = false;
+    this.bgmList.play();
+  }
+
+  bgmOff() {
+    this.bgmList.muted = true;
+    this.bgmList.pause();
+  }
+
+  setRandomBgm() {
+    const others = bgmSounds.filter(
+      (sound) => sound !== this.bgmList.currentSrc.replace(location.origin, "")
+    );
+
+    const source =
+      (import.meta.env.DEV ? "" : "/new-solitaire") +
+      others[Math.floor(others.length * Math.random())];
+
+    this.bgmList.src = source;
+
+    if (this.bgm) {
+      this.bgmList.play();
+    }
+    const bgm = this.bgmList.src.split("daehanghaesidae_")[1];
+    if (CURRENT_BGM()) {
+      CURRENT_BGM().style.display = bgm ? "inline-block" : "none";
+      CURRENT_BGM().innerHTML = `<span id="slide">${bgm}</span>` || "";
+      if (SLIDE()) {
+        SLIDE().dataset.content = bgm || "";
+      }
+    }
+  }
+
+  pickSound() {
+    const audio = new Audio(
+      (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.pick
+    );
+    audio.currentTime = 0.02;
+    audio.volume = 0.6;
+    audio.play();
+  }
+  shuffleSound() {
+    const audio = new Audio(
+      (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.shuffle
+    );
+    audio.currentTime = 0.01;
+    audio.volume = 0.5;
+    audio.play();
+  }
 
   randomTheme() {
     this.currentTheme = themes[Math.floor(themes.length * Math.random())];
