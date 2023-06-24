@@ -49,8 +49,21 @@ export default class Solitaire {
   currentTheme: string = themes[0];
 
   effect: boolean = true;
-  bgm: boolean = false;
-  bgmList: HTMLAudioElement /* : { id: number; active: boolean; audio: HTMLAudioElement }[] */;
+  sound: {
+    bgm: {
+      active: boolean;
+      list: HTMLAudioElement;
+    };
+    effect: {
+      active: boolean;
+    };
+  } = {
+    bgm: { active: false, list: null },
+    effect: { active: true },
+  };
+
+  // bgm: boolean = false;
+  // bgmList: HTMLAudioElement /* : { id: number; active: boolean; audio: HTMLAudioElement }[] */;
 
   constructor(options: Options) {
     if (typeof options.mode === "number") {
@@ -68,7 +81,7 @@ export default class Solitaire {
 
     this.setBGM();
 
-    // console.log(this.bgmList);
+    // console.log(this.sound.bgm.list);
   }
 
   // setDetector(detector: Function) {
@@ -76,13 +89,13 @@ export default class Solitaire {
   // }
 
   setBGM() {
-    this.bgmList = new Audio();
-    this.bgmList.muted = true;
-    this.bgmList.volume = bgmVolume;
-    // this.bgmList.defaultPlaybackRate = 5;
+    this.sound.bgm.list = new Audio();
+    this.sound.bgm.list.muted = true;
+    this.sound.bgm.list.volume = bgmVolume;
+    // this.sound.bgm.list.defaultPlaybackRate = 5;
     this.setRandomBgm();
 
-    this.bgmList.addEventListener(
+    this.sound.bgm.list.addEventListener(
       "ended",
       (() => {
         this.setRandomBgm();
@@ -91,30 +104,31 @@ export default class Solitaire {
   }
 
   bgmStart() {
-    this.bgmList.muted = false;
-    this.bgmList.play();
+    this.sound.bgm.list.muted = false;
+    this.sound.bgm.list.play();
   }
 
   bgmOff() {
-    this.bgmList.muted = true;
-    this.bgmList.pause();
+    this.sound.bgm.list.muted = true;
+    this.sound.bgm.list.pause();
   }
 
   setRandomBgm() {
     const others = bgmSounds.filter(
-      (sound) => sound !== this.bgmList.currentSrc.replace(location.origin, "")
+      (sound) =>
+        sound !== this.sound.bgm.list.currentSrc.replace(location.origin, "")
     );
 
     const source =
       (import.meta.env.DEV ? "" : "/new-solitaire") +
       others[Math.floor(others.length * Math.random())];
 
-    this.bgmList.src = source;
+    this.sound.bgm.list.src = source;
 
-    if (this.bgm) {
-      this.bgmList.play();
+    if (this.sound.bgm.active) {
+      this.sound.bgm.list.play();
     }
-    const bgm = this.bgmList.src.split("daehanghaesidae_")[1];
+    const bgm = this.sound.bgm.list.src.split("daehanghaesidae_")[1];
     if (CURRENT_BGM()) {
       CURRENT_BGM().style.display = bgm ? "inline-block" : "none";
       CURRENT_BGM().innerHTML = `<span id="slide">${bgm}</span>` || "";

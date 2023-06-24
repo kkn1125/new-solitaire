@@ -56,7 +56,7 @@ export default class EventManager {
     const closest = target.closest("#bgm");
 
     if (closest && closest.id === "bgm") {
-      this.solitaire.bgm = !this.solitaire.bgm;
+      this.solitaire.sound.bgm.active = !this.solitaire.sound.bgm.active;
       this.renderer.update();
     }
   }

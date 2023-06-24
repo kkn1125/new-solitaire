@@ -85,6 +85,7 @@ export default class Renderer {
       <div id="top-bar">
         <div></div>
         <div id="options">
+          <button id="restart">🃏new game</button>
           <div id="score" class="shape" data-game-score="0"></div>
           <div id="timer" class="shape"></div>
           <div id="move" class="shape" data-game-move="0"></div>
@@ -181,16 +182,20 @@ export default class Renderer {
 
 
       </div>
-      <button id="restart">Solitaire!</button>
+      
     `;
   }
 
   dpBGM() {
-    const bgm = this.solitaire.bgmList.currentSrc?.split("daehanghaesidae_")[1];
-    CURRENT_BGM().style.display = bgm ? "inline-block" : "none";
-    CURRENT_BGM().innerHTML = `<span id="slide">${bgm}</span>` || "";
-    if (SLIDE()) {
-      SLIDE().dataset.content = bgm || "";
+    const bgm =
+      this.solitaire.sound.bgm.list.currentSrc?.split("daehanghaesidae_")[1];
+    CURRENT_BGM().style.display =
+      this.solitaire.sound.bgm.active && bgm ? "inline-block" : "none";
+    if (this.solitaire.sound.bgm.active && SLIDE()?.innerHTML !== bgm) {
+      CURRENT_BGM().innerHTML = `<span id="slide">${bgm}</span>` || "";
+      if (SLIDE()) {
+        SLIDE().dataset.content = bgm || "";
+      }
     }
   }
 
@@ -259,8 +264,8 @@ export default class Renderer {
   }
 
   startBgm() {
-    if (this.solitaire.bgm) {
-      this.solitaire.bgmList.play();
+    if (this.solitaire.sound.bgm.active) {
+      this.solitaire.sound.bgm.list.play();
     }
     // this.solitaire.randomBgm();
   }
@@ -274,7 +279,10 @@ export default class Renderer {
   }
 
   toggleBgm() {
-    if (!this.solitaire.bgm && !BGM().classList.contains(".not-use")) {
+    if (
+      !this.solitaire.sound.bgm.active &&
+      !BGM().classList.contains(".not-use")
+    ) {
       BGM().classList.add("not-use");
       this.solitaire.bgmOff();
     } else {
