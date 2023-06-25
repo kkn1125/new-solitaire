@@ -85,7 +85,6 @@ export default class Renderer {
       <div id="top-bar">
         <div></div>
         <div id="options">
-          <button id="restart">🃏new game</button>
           <div id="score" class="shape" data-game-score="0"></div>
           <div id="timer" class="shape"></div>
           <div id="move" class="shape" data-game-move="0"></div>
@@ -183,6 +182,7 @@ export default class Renderer {
 
       </div>
       
+      <button id="restart">new game</button>
     `;
   }
 
@@ -257,7 +257,8 @@ export default class Renderer {
     this.checkAutoStack();
     if (!this.active_auto_complete) {
       if (this.auto_complete && !AUTO_COMPLETE()) {
-        APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE!!</button>`;
+        console.log("here");
+        APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE</button>`;
       }
     }
     this.isWin();

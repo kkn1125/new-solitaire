@@ -538,11 +538,11 @@ body {
       user-select: none;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      padding: 0.3rem 0.8rem;
-      // position: fixed;
+      padding: 1.2rem 0.8rem;
+      position: fixed;
 
       font-weight: 700;
-      font-size: 14px;
+      font-size: 0.8rem;
       color: white;
       border: none;
 
@@ -566,7 +566,7 @@ body {
       }
       background-color: #893489;
       bottom: 25px;
-      right: 150px;
+      right: 130px;
     }
 
     #wrapper {
