@@ -33,7 +33,9 @@ export default class EventManager {
     if (document.hidden) {
       this.solitaire.bgmOff();
     } else {
-      this.solitaire.bgmStart();
+      if (this.solitaire.sound.bgm.active) {
+        this.solitaire.bgmStart();
+      }
     }
   }
 
