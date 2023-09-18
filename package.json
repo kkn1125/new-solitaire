@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "pages": "touch build/.nojekyll && cd build/ && git init && git add -A && git commit -m \"gh-pages\" && git push https://github.com/kkn1125/new-solitaire.git master:gh-pages -f",
+    "pages": "touch build/.nojekyll && cd build/ && rm -rf .git/ && git init && git add -A && git commit -m \"gh-pages\" && git push https://github.com/kkn1125/new-solitaire.git master:gh-pages -f",
     "deploy": "npm run build && npm run pages && git add -A && git commit -m \"auto: directly deploy\" && git push origin main && git fetch"
   },
   "devDependencies": {

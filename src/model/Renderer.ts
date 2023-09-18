@@ -48,7 +48,7 @@ const cardTexts = (card: Card) => `${useImage() ? "<!--" : ""}
 
 export default class Renderer {
   solitaire: Solitaire;
-  timer: number | NodeJS.Timer;
+  timer: number;
   auto_complete: boolean = false;
   active_auto_complete: boolean = false;
 
