@@ -439,16 +439,19 @@ body {
       }
 
       #bgm {
+        color: black !important;
         @include bottom-comment("BGM");
         @include disabled("BGM");
       }
 
       #effect {
+        color: black !important;
         @include bottom-comment("EFFECT");
         @include disabled("EFFECT");
       }
 
       #theme {
+        color: black !important;
         svg {
           width: 25px;
           height: 25px;
@@ -473,6 +476,7 @@ body {
         justify-content: center;
         // text-align: center;
         gap: 1rem;
+        color: black !important;
 
         @media (min-width: 0px) and (max-width: 280px) {
           gap: 0.2rem;
@@ -743,9 +747,20 @@ body {
       }
     }
 
+    [data-card-type="spade"],
+    [data-card-type="clover"] {
+      &,
+      & * {
+        color: black !important;
+      }
+    }
+
     [data-card-type="heart"],
     [data-card-type="diamond"] {
-      color: red;
+      &,
+      & * {
+        color: red !important;
+      }
     }
 
     .back,

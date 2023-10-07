@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+  <head>
+    <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, width=device-width, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/new-solitaire/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/new-solitaire/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/new-solitaire/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/new-solitaire/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/new-solitaire/favicon/site.webmanifest" />
+    <meta name="image" content="/new-solitaire/brand/logo_color.png" />
+    <meta name="title" content="devkimson - solitaire" />
+    <meta name="content" content="enjoy the solitaire!" />
+    <meta name="author" content="devkimson" />
+    <meta name="og:image" content="/new-solitaire/brand/logo_color.png" />
+    <meta name="og:title" content="devkimson - solitaire" />
+    <meta name="og:content" content="enjoy the solitaire!" />
+    <meta name="og:author" content="devkimson" />
+    <title>Devkimson::Solitaire</title>
+    <script
+      type="module"
+      crossorigin
+      src="/new-solitaire/assets/index-b68844b0.js"
+    ></script>
+    <style>
+      div,
+      span,
+      li {
+        color: #000000;
+      }
+    </style>
+    <link rel="stylesheet" href="/new-solitaire/assets/index-aa7cc597.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="cordova.js"></script>
+  </body>
+</html>
