@@ -8,6 +8,7 @@ import {
   themes,
 } from "../util/global";
 import Card from "./Card";
+import Logger from "./Logger";
 
 type GameMode = "development" | "production";
 
@@ -16,6 +17,7 @@ interface Options {
 }
 
 export default class Solitaire {
+  logger: Logger;
   empty: Card = new Card("empty", 0);
   back: Card = new Card("back", 0);
   mode: GameMode = "development";
@@ -66,6 +68,7 @@ export default class Solitaire {
   // bgmList: HTMLAudioElement /* : { id: number; active: boolean; audio: HTMLAudioElement }[] */;
 
   constructor(options: Options) {
+    this.logger = new Logger(this.constructor.name);
     if (typeof options.mode === "number") {
       this.mode = options.mode ? "development" : "production";
     } else {
@@ -81,7 +84,7 @@ export default class Solitaire {
 
     this.setBGM();
 
-    // console.log(this.sound.bgm.list);
+    // this.logger.log(this.sound.bgm.list);
   }
 
   // setDetector(detector: Function) {

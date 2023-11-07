@@ -17,6 +17,7 @@ import {
 } from "../util/global";
 import { formatFromCountdown } from "../util/tool";
 import Card from "./Card";
+import Logger from "./Logger";
 import Solitaire from "./Solitaire";
 
 const isDesktop = () => innerWidth > 768;
@@ -51,9 +52,11 @@ export default class Renderer {
   timer: number;
   auto_complete: boolean = false;
   active_auto_complete: boolean = false;
+  logger: Logger;
 
   constructor(solitaire: Solitaire) {
     this.solitaire = solitaire;
+    this.logger = new Logger(this.constructor.name);
     // this.solitaire.setDetector(this.dpBGM.bind(this));
   }
 
@@ -257,7 +260,7 @@ export default class Renderer {
     this.checkAutoStack();
     if (!this.active_auto_complete) {
       if (this.auto_complete && !AUTO_COMPLETE()) {
-        console.log("here");
+        this.logger.log("here");
         APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE</button>`;
       }
     }
@@ -346,7 +349,7 @@ export default class Renderer {
         this.auto_complete = true;
         this.active_auto_complete = false;
       }
-      console.log("auto complete");
+      this.logger.log("auto complete");
     }
   }
 

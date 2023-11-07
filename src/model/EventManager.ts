@@ -1,15 +1,18 @@
 import Card from "./Card";
+import Logger from "./Logger";
 import Renderer from "./Renderer";
 import Solitaire from "./Solitaire";
 
 export default class EventManager {
   solitaire: Solitaire;
   renderer: Renderer;
+  logger: Logger;
 
   constructor(solitaire: Solitaire, renderer: Renderer) {
     this.#initListeners();
     this.solitaire = solitaire;
     this.renderer = renderer;
+    this.logger = new Logger(this.constructor.name);
   }
 
   #initListeners() {
@@ -219,11 +222,12 @@ export default class EventManager {
 
     if (target) {
       const emptyEl = target.closest(".empty");
+      const isGroundEl = target.parentElement.parentElement.id === "ground";
       const selector = this.solitaire.selector;
       const testModeWithoutKing = this.solitaire.mode === "development";
-
       /* king on empty place logic */
       if (
+        isGroundEl &&
         emptyEl &&
         selector[0] !== null &&
         (testModeWithoutKing || selector[0][0].number === 13)
@@ -233,7 +237,8 @@ export default class EventManager {
         const index = [...ground.children].findIndex(
           (child) => child === column
         );
-        console.log("good");
+        console.log(this.logger.log);
+        this.logger.log("good");
         this.solitaire.countUpMove();
         this.solitaire.moveToColumn(selector[0], index);
         this.renderer.update();
@@ -243,7 +248,7 @@ export default class EventManager {
         selector[0] !== null &&
         (testModeWithoutKing || selector[0][0].number !== 13)
       ) {
-        console.log("bad");
+        this.logger.log("bad");
       }
       if (target.closest(".card")) {
         const cardEl = target.closest(".card") as HTMLDivElement;
@@ -320,7 +325,7 @@ export default class EventManager {
                   cardEl
                 ) {
                   if (isStackable) {
-                    console.log("good");
+                    this.logger.log("good");
                     this.solitaire.countUpMove();
                     this.solitaire.moveToColumn(
                       selector[0],
@@ -328,7 +333,7 @@ export default class EventManager {
                     );
                     this.renderer.soundPick();
                   } else {
-                    console.log("bad");
+                    this.logger.log("bad");
                   }
                 }
 
