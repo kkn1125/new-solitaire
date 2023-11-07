@@ -25,6 +25,6 @@ dist-ssr
 \[x\]*
 .env*
 
-build/
+build/*
 dist/
 out/
