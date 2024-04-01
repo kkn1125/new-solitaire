@@ -237,7 +237,7 @@ export default class EventManager {
         const index = [...ground.children].findIndex(
           (child) => child === column
         );
-        console.log(this.logger.log);
+        // console.log(this.logger.log);
         this.logger.log("good");
         this.solitaire.countUpMove();
         this.solitaire.moveToColumn(selector[0], index);

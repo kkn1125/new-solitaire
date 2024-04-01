@@ -74,8 +74,7 @@ export const bgmSounds = [
   "/bgm/daehanghaesidae_marseille.mp4",
 ];
 
-export const cardPickVolume = 1;
-export const bgmVolume = 0.55;
+export const bgmVolume = 0.75;
 
 /* backgrounds */
 export const themes = [

@@ -116,17 +116,28 @@ export default class Solitaire {
     this.sound.bgm.list.pause();
   }
 
+  playBgmBy(bgm: string) {
+    this.sound.bgm.list.src = bgm;
+  }
+
   setRandomBgm() {
+    if (!this.sound.bgm.list.currentSrc) {
+      const randomIndex = Math.floor(Math.random() * bgmSounds.length);
+      this.playBgmBy(bgmSounds[randomIndex]);
+      this.sound.bgm.list.playbackRate = 1;
+      return;
+    }
+
     const others = bgmSounds.filter(
-      (sound) =>
-        sound !== this.sound.bgm.list.currentSrc.replace(location.origin, "")
+      (sound) => sound !== this.sound.bgm.list.src.replace(location.origin, "")
     );
 
     const source =
       (import.meta.env.DEV ? "" : "/new-solitaire") +
       others[Math.floor(others.length * Math.random())];
 
-    this.sound.bgm.list.src = source;
+    this.playBgmBy(source);
+    this.sound.bgm.list.playbackRate = 1;
 
     if (this.sound.bgm.active) {
       this.sound.bgm.list.play();
@@ -146,7 +157,7 @@ export default class Solitaire {
       (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.pick
     );
     audio.currentTime = 0.02;
-    audio.volume = 0.6;
+    audio.volume = bgmVolume;
     audio.play();
   }
   shuffleSound() {
@@ -154,7 +165,7 @@ export default class Solitaire {
       (import.meta.env.DEV ? "" : "/new-solitaire") + effectSounds.shuffle
     );
     audio.currentTime = 0.01;
-    audio.volume = 0.5;
+    audio.volume = bgmVolume;
     audio.play();
   }
 
