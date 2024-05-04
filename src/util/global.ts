@@ -1,3 +1,5 @@
+import { version } from "../../package.json";
+
 export const CARD_ENV: {
   TYPES: OnlyUsableCard[];
   SHAPE: { [k in OnlyUsableCard]: string };
@@ -86,3 +88,5 @@ export const themes = [
   "theme-6",
   "theme-7",
 ];
+
+export { version };

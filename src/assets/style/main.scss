@@ -780,3 +780,15 @@ body {
     }
   }
 }
+
+.app-version {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
+  @include border-radius(0.5);
+  background-color: #534bb8;
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.5rem;
+}

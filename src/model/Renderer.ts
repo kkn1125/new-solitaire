@@ -1,4 +1,3 @@
-import icons from "../../public/icon/icons";
 import {
   APP,
   AUTO_COMPLETE,
@@ -19,6 +18,7 @@ import { formatFromCountdown } from "../util/tool";
 import Card from "./Card";
 import Logger from "./Logger";
 import Solitaire from "./Solitaire";
+import icons from "../assets/icon/icons";
 
 const isDesktop = () => innerWidth > 768;
 const useImage = () => false || isDesktop();

@@ -1,6 +1,7 @@
 import EventManager from "./model/EventManager";
 import Renderer from "./model/Renderer";
 import Solitaire from "./model/Solitaire";
+import { APP, version } from "./util/global";
 
 /* 
   MODE Value
@@ -16,3 +17,10 @@ const renderer = new Renderer(game);
 const eventManager = new EventManager(game, renderer);
 
 renderer.render();
+
+const versionTag = document.createElement("duv");
+
+versionTag.innerText = version;
+versionTag.classList.add("app-version");
+
+APP.append(versionTag);
