@@ -117,13 +117,15 @@ export default class Solitaire {
   }
 
   playBgmBy(bgm: string) {
+    // console.log(bgm);
     this.sound.bgm.list.src = bgm;
   }
 
   setRandomBgm() {
     if (!this.sound.bgm.list.currentSrc) {
       const randomIndex = Math.floor(Math.random() * bgmSounds.length);
-      this.playBgmBy(bgmSounds[randomIndex]);
+      const source = bgmSounds[randomIndex];
+      this.playBgmBy((import.meta.env.DEV ? "" : "/new-solitaire") + source);
       this.sound.bgm.list.playbackRate = 1;
       return;
     }
@@ -135,7 +137,7 @@ export default class Solitaire {
     const source =
       (import.meta.env.DEV ? "" : "/new-solitaire") +
       others[Math.floor(others.length * Math.random())];
-
+    // console.log("source", source);
     this.playBgmBy(source);
     this.sound.bgm.list.playbackRate = 1;
 
