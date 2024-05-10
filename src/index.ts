@@ -18,7 +18,7 @@ const eventManager = new EventManager(game, renderer);
 
 renderer.render();
 
-const versionTag = document.createElement("duv");
+const versionTag = document.createElement("div");
 
 versionTag.innerText = version;
 versionTag.classList.add("app-version");
