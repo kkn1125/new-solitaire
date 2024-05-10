@@ -12,6 +12,7 @@ import {
   SCORE,
   SLIDE,
   STACK,
+  TEMPTORARY,
   TIMER,
 } from "../util/global";
 import { formatFromCountdown } from "../util/tool";
@@ -122,7 +123,16 @@ export default class Renderer {
               <div class="empty"></div>
             </div>
             
-            <div class="gap"></div>
+            <!--<div class="gap"></div>-->
+          </div>
+
+          <div id="temporary-deck">
+            
+            <div id="pick">
+              <div class="empty"></div>
+            </div>
+            
+            <!--<div class="gap"></div>-->
           </div>
 
           <div id="stack">
@@ -202,6 +212,19 @@ export default class Renderer {
     }
   }
 
+  temporaryZone() {
+    const temporary = this.solitaire.temporary;
+    TEMPTORARY().querySelector("#pick").innerHTML = `<div class="empty"></div>`;
+    return temporary
+      .map((card, order) => {
+        TEMPTORARY().querySelector("#pick").innerHTML += this.temprorayCardForm(
+          card,
+          order
+        );
+      })
+      .join("");
+  }
+
   ground() {
     const ground = this.solitaire.ground;
     return ground.forEach((column, col) => {
@@ -218,17 +241,17 @@ export default class Renderer {
     const empty = `<div class="empty"></div>`;
     const el = (type: OnlyUsableCard) =>
       STACK().querySelector(`#${type}-stack`);
-    if (Object.entries(stacks).some((typeStack) => typeStack[1].length > 0)) {
-      Object.entries(stacks).forEach(([type, cards]) => {
-        el(type as OnlyUsableCard).innerHTML = empty;
-        cards.forEach((card, order) => {
-          el(card.type as OnlyUsableCard).innerHTML += this.stackCardForm(
-            card,
-            order
-          );
-        });
+    // if (Object.entries(stacks).some((typeStack) => typeStack[1].length > 0)) {
+    Object.entries(stacks).forEach(([type, cards]) => {
+      el(type as OnlyUsableCard).innerHTML = empty;
+      cards.forEach((card, order) => {
+        el(card.type as OnlyUsableCard).innerHTML += this.stackCardForm(
+          card,
+          order
+        );
       });
-    }
+    });
+    // }
   }
 
   pick() {
@@ -252,6 +275,7 @@ export default class Renderer {
     this.pick();
     this.stack();
     this.isEmptyDeck();
+    this.temporaryZone();
     this.move();
     this.score();
     this.effect();
@@ -380,6 +404,21 @@ export default class Renderer {
       ${cardTexts(card)}
       </div>
     `;
+  }
+
+  temprorayCardForm(card: Card, order: number) {
+    return `<div
+    class="card${card.selected ? " selected" : ""}"
+    data-card-column="${card.column}"
+    data-card-open="${card.isOpen}"
+    data-card-number="${card.number}"
+    data-card-type="${card.type}"
+    data-card-state="${card.state}"
+    style="top: ${isDesktop() ? order * 22 : order * 15}px; ${cardImages(
+      card
+    )}">
+    ${cardTexts(card)}
+  </div>`;
   }
 
   groundCardForm(card: Card, order: number) {

@@ -41,6 +41,7 @@ export default class Solitaire {
     clover: [],
   };
   ground: Card[][] = [[], [], [], [], [], [], []];
+  temporary: Card[] = [];
 
   score: number = 0;
   move: number = 0;
@@ -83,13 +84,7 @@ export default class Solitaire {
     this.#deckToStore();
 
     this.setBGM();
-
-    // this.logger.log(this.sound.bgm.list);
   }
-
-  // setDetector(detector: Function) {
-  //   this.detector = detector;
-  // }
 
   setBGM() {
     this.sound.bgm.list = new Audio();
@@ -197,6 +192,7 @@ export default class Solitaire {
     };
     this.empty = new Card("empty", 0);
     this.back = new Card("back", 0);
+    this.temporary = [];
     this.store = [];
     this.pick = [];
     this.stack = {
@@ -338,6 +334,22 @@ export default class Solitaire {
           return true;
         }
       }
+    } else if (card.state === "temporary") {
+      const temporaries = this.temporary;
+      const lastCardIndex = temporaries.findIndex(
+        (pick) => pick.number === card.number && pick.type === card.type
+      );
+      if (lastCardIndex > -1) {
+        if (
+          (typeOfStack.length === 0 && card.number === 1) ||
+          (typeOfStackLastCard &&
+            typeOfStackLastCard.number + 1 === card.number)
+        ) {
+          const found = temporaries.splice(lastCardIndex)[0];
+          this.moveToStack(card);
+          return true;
+        }
+      }
     } else if (this.ground[currentColumn] && card.state !== "stack") {
       const cardIndex = this.ground[currentColumn].findIndex(
         (item) => item.number === card.number && item.type === card.type
@@ -356,6 +368,56 @@ export default class Solitaire {
       }
     }
     return false;
+  }
+
+  stageToTemporary(cards: Card[]) {
+    const startCard = cards[0];
+    const startColumn = startCard.column;
+    const cardState = startCard.state;
+
+    switch (cardState) {
+      case "pick": {
+        cards.forEach((card) => {
+          card.updateColumn(-1);
+          card.updateState("temporary");
+        });
+        this.temporary.push(this.pick.pop());
+        break;
+      }
+      case "ground": {
+        const startIndex = this.findOrderInColumn(startCard);
+        const slice = this.ground[startColumn].splice(startIndex);
+
+        slice.forEach((card) => {
+          card.updateColumn(-1);
+          card.updateState("temporary");
+        });
+        this.temporary.push(...slice);
+        this.afterCardOpen(startColumn);
+        break;
+      }
+      case "stack": {
+        const cardIndex = this.stack[
+          startCard.type as OnlyUsableCard
+        ].findIndex(
+          (stack) =>
+            stack.number === startCard.number && stack.type === startCard.type
+        );
+        if (cardIndex > -1) {
+          const slice =
+            this.stack[startCard.type as OnlyUsableCard].splice(cardIndex);
+          if (this.stack[startCard.type as OnlyUsableCard].length === 0) {
+            this.stack[startCard.type as OnlyUsableCard] = [];
+          }
+          slice.forEach((card) => {
+            card.updateColumn(-1);
+            card.updateState("temporary");
+          });
+          this.temporary.push(...slice);
+        }
+        break;
+      }
+    }
   }
 
   moveToGround(card: Card, column: number) {
@@ -395,6 +457,13 @@ export default class Solitaire {
     } else if (startCard.state === "pick") {
       const startIndex = this.findOrderInPickList(startCard);
       const slice = this.pick.splice(startIndex);
+      this.ground[column].push(
+        ...slice.map((card) => card.updateColumn(column))
+      );
+      this.moveToGround(startCard, column);
+    } else if (startCard.state === "temporary") {
+      // const startIndex = this.findOrderInPickList(startCard);
+      const slice = this.temporary.splice(0);
       this.ground[column].push(
         ...slice.map((card) => card.updateColumn(column))
       );

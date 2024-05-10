@@ -578,16 +578,22 @@ body {
       user-select: none;
       display: flex;
       flex-direction: column;
+
       @include top-down-gap;
 
       #top {
         display: flex;
         justify-content: center;
-        @include card-gap();
+        flex-wrap: wrap;
+        column-gap: 4.5rem;
+        row-gap: 1rem;
+
+        // @include card-gap();
 
         #pick-deck {
           display: flex;
-          @include card-gap();
+          gap: 0.5rem;
+          // @include card-gap();
 
           .gap {
             @include card-size(1);
@@ -648,9 +654,25 @@ body {
           }
         }
 
-        #stack {
+        #temporary-deck {
           display: flex;
           @include card-gap();
+
+          .gap {
+            @include card-size(1);
+          }
+
+          #pick {
+            position: relative;
+            display: flex;
+
+            @include card-parent;
+          }
+        }
+
+        #stack {
+          display: flex;
+          gap: 0.3rem;
           @include card-parent;
 
           #diamond-stack,

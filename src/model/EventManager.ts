@@ -25,12 +25,9 @@ export default class EventManager {
     window.addEventListener("click", this.handleToggleBGm.bind(this));
     window.addEventListener("resize", this.handleResize.bind(this));
 
-    // document.addEventListener("mouseleave", this.handleMouseLeave.bind(this));
     document.addEventListener("visibilitychange", this.handleTabout.bind(this));
     window.addEventListener("beforeunload", this.handleBeforeClose.bind(this));
   }
-
-  // handleMouseLeave(e: MouseEvent) {}
 
   handleTabout(e: Event) {
     if (document.hidden) {
@@ -71,7 +68,6 @@ export default class EventManager {
     const closest = target.closest("#theme");
 
     if (closest && closest.id === "theme") {
-      // this.solitaire.randomTheme();
       this.solitaire.nextTheme();
       this.renderer.update();
     }
@@ -87,10 +83,6 @@ export default class EventManager {
     window.removeEventListener("click", this.handleToggleBGm.bind(this));
     window.removeEventListener("resize", this.handleResize.bind(this));
 
-    // document.removeEventListener(
-    //   "mouseleave",
-    //   this.handleMouseLeave.bind(this)
-    // );
     document.removeEventListener(
       "visibilitychange",
       this.handleTabout.bind(this)
@@ -223,12 +215,15 @@ export default class EventManager {
     if (target) {
       const emptyEl = target.closest(".empty");
       const isGroundEl = target.parentElement.parentElement.id === "ground";
+      const isTemporary = target.closest("#temporary-deck");
+      const isTemporaryEmpty = this.solitaire.temporary.length === 0;
       const selector = this.solitaire.selector;
       const testModeWithoutKing = this.solitaire.mode === "development";
       /* king on empty place logic */
       if (
         isGroundEl &&
         emptyEl &&
+        !isTemporary &&
         selector[0] !== null &&
         (testModeWithoutKing || selector[0][0].number === 13)
       ) {
@@ -245,9 +240,27 @@ export default class EventManager {
         this.renderer.soundPick();
       } else if (
         emptyEl &&
+        !isTemporary &&
         selector[0] !== null &&
         (testModeWithoutKing || selector[0][0].number !== 13)
       ) {
+        this.logger.log("bad");
+      } else if (isTemporary && selector[0] !== null && isTemporaryEmpty) {
+        const pick = target.parentElement as HTMLDivElement;
+        const temporary = pick.parentElement as HTMLDivElement;
+        // const index = [...temporary.children].findIndex(
+        //   (child) => child === pick
+        // );
+        // console.log(temporary,index)
+        this.logger.log("good");
+        this.solitaire.countUpMove();
+        this.solitaire.stageToTemporary(selector[0]);
+        this.renderer.soundPick();
+
+        this.solitaire.clearSelector();
+        // this.solitaire.countUpScore();
+        this.renderer.update();
+      } else if (isTemporary && selector[0] !== null && !isTemporaryEmpty) {
         this.logger.log("bad");
       }
       if (target.closest(".card")) {
@@ -266,7 +279,10 @@ export default class EventManager {
               const column = (cardEl as unknown as HTMLDivElement).parentNode;
               const lastItem = Array.from(column.children).slice(-1)[0];
               if (
-                (state === "ground" || state === "pick" || state === "stack") &&
+                (state === "ground" ||
+                  state === "pick" ||
+                  state === "stack" ||
+                  state === "temporary") &&
                 lastItem === cardEl
               ) {
                 if (this.solitaire.isStackDirectly(card)) {
@@ -297,7 +313,7 @@ export default class EventManager {
 
                 card.selected = true;
                 selector[0] = [card];
-              } else if (state === "ground") {
+              } else if (state === "ground" || state === "temporary") {
                 const childrens = Array.from(column.children)
                   .filter((child) => child.classList.contains("card"))
                   .map(this.convertElToCard.bind(this)) as Card[];

@@ -35,6 +35,8 @@ export const CARD_ENV: {
 
 export const APP = document.querySelector("#app") as HTMLDivElement;
 export const GROUND = () => document.querySelector("#ground") as HTMLDivElement;
+export const TEMPTORARY = () =>
+  document.querySelector("#temporary-deck") as HTMLDivElement;
 export const STACK = () => document.querySelector("#stack") as HTMLDivElement;
 export const PICK = () => document.querySelector("#pick") as HTMLDivElement;
 export const DECK = () => document.querySelector("#deck") as HTMLDivElement;

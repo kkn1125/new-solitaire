@@ -1,7 +1,7 @@
 {
   "name": "solitaire",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,13 +12,13 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.4.5",
     "path": "^0.12.7",
-    "sass": "^1.62.1",
-    "typescript": "^5.0.2",
-    "vite": "^4.3.9"
+    "sass": "^1.77.0",
+    "typescript": "^5.4.5",
+    "vite": "^4.5.3"
   },
   "dependencies": {
-    "vite-plugin-svgr": "^3.2.0"
+    "vite-plugin-svgr": "^3.3.0"
   }
 }
