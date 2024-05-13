@@ -10,13 +10,13 @@ export default class Logger {
   setContext(context: string) {
     this.context = context;
     this.log = (() =>
-      !this.mode
+      this.mode
         ? console.log.bind(this, `[${this.context.toUpperCase()}]`)
         : () => {})();
   }
 
   log = (() =>
-    !this.mode
+    this.mode
       ? console.log.bind(this, `[${this.context.toUpperCase()}]`)
       : () => {})();
 }
