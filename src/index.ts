@@ -8,7 +8,7 @@ import { APP, version } from "./util/global";
   1: development
   0: production
 */
-const MODE = 1;
+const MODE = 0;
 
 const game = new Solitaire({
   mode: MODE,
