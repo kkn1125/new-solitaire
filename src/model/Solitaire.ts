@@ -450,7 +450,11 @@ export default class Solitaire {
       const startIndex = this.findOrderInColumn(startCard);
       const slice = this.ground[startColumn].splice(startIndex);
       this.ground[column].push(
-        ...slice.map((card) => card.updateColumn(column))
+        ...slice.map((card) => {
+          card.updateColumn(column);
+          card.updateState("ground");
+          return card;
+        })
       );
       this.afterCardOpen(startColumn);
       this.moveToGround(startCard, column);
@@ -462,10 +466,13 @@ export default class Solitaire {
       );
       this.moveToGround(startCard, column);
     } else if (startCard.state === "temporary") {
-      // const startIndex = this.findOrderInPickList(startCard);
       const slice = this.temporary.splice(0);
       this.ground[column].push(
-        ...slice.map((card) => card.updateColumn(column))
+        ...slice.map((card) => {
+          card.updateColumn(column);
+          card.updateState("ground");
+          return card;
+        })
       );
       this.moveToGround(startCard, column);
     }

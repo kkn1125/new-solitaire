@@ -252,7 +252,7 @@ export default class EventManager {
         //   (child) => child === pick
         // );
         // console.log(temporary,index)
-        this.logger.log("good");
+        this.logger.log("temp good");
         this.solitaire.countUpMove();
         this.solitaire.stageToTemporary(selector[0]);
         this.renderer.soundPick();

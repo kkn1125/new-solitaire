@@ -8,10 +8,10 @@ import { APP, version } from "./util/global";
   1: development
   0: production
 */
-const MODE = 0;
+const MODE = 1;
 
 const game = new Solitaire({
-  mode: 0,
+  mode: MODE,
 });
 const renderer = new Renderer(game);
 const eventManager = new EventManager(game, renderer);

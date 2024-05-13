@@ -288,6 +288,9 @@ export default class Renderer {
         APP.innerHTML += `<button id="auto-complete">AUTO COMPLETE</button>`;
       }
     }
+    if (!this.auto_complete && AUTO_COMPLETE()) {
+      document.querySelectorAll("#auto-complete").forEach((el) => el.remove());
+    }
     this.isWin();
   }
 
@@ -364,7 +367,8 @@ export default class Renderer {
     const isOpenInGround = this.solitaire
       .getCardInGrounds()
       .every((card) => card.isOpen);
-    if (isOpenInGround && isEmptyPick && isEmptyStore) {
+    const isEmptyTemporary = this.solitaire.temporary.length === 0;
+    if (isOpenInGround && isEmptyPick && isEmptyStore && isEmptyTemporary) {
       if (
         !this.active_auto_complete &&
         !this.auto_complete &&
@@ -374,6 +378,9 @@ export default class Renderer {
         this.active_auto_complete = false;
       }
       this.logger.log("auto complete");
+    } else {
+      this.auto_complete = false;
+      this.active_auto_complete = false;
     }
   }
 
