@@ -92,3 +92,7 @@ export const themes = [
 ];
 
 export { version };
+
+export const isNil = (value: number): value is undefined | null => {
+  return value === undefined || value === null;
+};

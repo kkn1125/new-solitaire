@@ -15,13 +15,13 @@ import {
   TEMPTORARY,
   TIMER,
 } from "../util/global";
-import { formatFromCountdown } from "../util/tool";
+import { formatFromCountdown, isDesktop } from "../util/tool";
 import Card from "./Card";
 import Logger from "./Logger";
 import Solitaire from "./Solitaire";
 import icons from "../assets/icon/icons";
 
-const isDesktop = () => innerWidth > 768;
+// const isDesktop = () => innerWidth > 768;
 const useImage = () => false || isDesktop();
 
 const cardImages = (card: Card) =>

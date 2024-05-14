@@ -386,6 +386,8 @@ export default class Solitaire {
       }
       case "ground": {
         const startIndex = this.findOrderInColumn(startCard);
+        if (this.ground[startColumn].slice(startIndex).length > 1) break;
+
         const slice = this.ground[startColumn].splice(startIndex);
 
         slice.forEach((card) => {
@@ -466,7 +468,7 @@ export default class Solitaire {
       );
       this.moveToGround(startCard, column);
     } else if (startCard.state === "temporary") {
-      const slice = this.temporary.splice(0);
+      const slice = this.temporary.splice(this.temporary.indexOf(startCard));
       this.ground[column].push(
         ...slice.map((card) => {
           card.updateColumn(column);

@@ -1,3 +1,7 @@
+* {
+  touch-action: none;
+}
+
 @mixin disabled($comment) {
   &.not-use::after {
     position: absolute;
@@ -681,6 +685,13 @@ body {
           #clover-stack {
             position: relative;
           }
+
+          .card {
+            box-shadow: none;
+            &:last-of-type {
+              box-shadow: 0 0 calc(0.5vw + 0.7vh) calc(0.2vw + 0.3vh) #00000026;
+            }
+          }
         }
       }
 
@@ -714,7 +725,7 @@ body {
         @include card-size(1);
         @include border-radius(0.5);
         @include card-image-size;
-        @include transition(150);
+        // @include transition(150);
       }
 
       .empty {
