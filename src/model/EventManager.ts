@@ -1,3 +1,5 @@
+import { isNil } from "../util/global";
+import { isDesktop } from "../util/tool";
 import Card from "./Card";
 import Logger from "./Logger";
 import Renderer from "./Renderer";
@@ -8,6 +10,11 @@ export default class EventManager {
   renderer: Renderer;
   logger: Logger;
 
+  startDrag: boolean = false;
+  dragging: HTMLDivElement;
+  dragX: number;
+  dragY: number;
+
   constructor(solitaire: Solitaire, renderer: Renderer) {
     this.#initListeners();
     this.solitaire = solitaire;
@@ -16,6 +23,11 @@ export default class EventManager {
   }
 
   #initListeners() {
+    // TODO: 포인터 드래그 이동 가능하도록 수정해야함.
+    // 예상으로는 솔리테어 객체 moveTo* 대폭 수정 필요할 것으로 보임
+    // window.addEventListener("pointerdown", this.handlePointerDown.bind(this));
+    // window.addEventListener("pointermove", this.handlePointerMove.bind(this));
+    // window.addEventListener("pointerup", this.handlePointerUp.bind(this));
     window.addEventListener("click", this.handleAutoComplete.bind(this));
     window.addEventListener("click", this.handleSelectCard.bind(this));
     window.addEventListener("click", this.handleDeckToPick.bind(this));
@@ -27,6 +39,206 @@ export default class EventManager {
 
     document.addEventListener("visibilitychange", this.handleTabout.bind(this));
     window.addEventListener("beforeunload", this.handleBeforeClose.bind(this));
+  }
+
+  pointerTimeout: number;
+  beforePosition: { top: string; left: string } = {
+    top: null,
+    left: null,
+  };
+
+  handlePointerDown(e: PointerEvent) {
+    const target = e.target as HTMLDivElement;
+
+    document.querySelectorAll(".card").forEach((cardEl: any) => {
+      const type = cardEl.dataset.cardType as OnlyUsableCard;
+      const number = Number(cardEl.dataset.cardNumber) as number;
+      const card = this.solitaire.deck[type].find(
+        (card) => card.number === number
+      ) as Card;
+      if (card) {
+        card.selected = false;
+        cardEl.classList.remove("selected");
+      }
+    });
+
+    if (target && target.classList.contains("card")) {
+      this.startDrag = true;
+      this.pointerTimeout = setTimeout(() => {
+        if (this.startDrag) {
+          clearTimeout(this.pointerTimeout);
+
+          const selector = this.solitaire.selector;
+
+          this.pointerTimeout = undefined;
+          this.dragging = target;
+          this.dragX = e.clientX;
+          this.dragY = e.clientY;
+          this.beforePosition.left = target.style.left;
+          this.beforePosition.top = target.style.top;
+          this.dragging.style.position = "absolute";
+          this.dragging.style.pointerEvents = "none";
+
+          if (target.dataset.cardState === "ground") {
+            const column = target.dataset.cardColumn;
+            const number = target.dataset.cardNumber;
+            const type = target.dataset.cardType;
+            const ground = this.solitaire.ground[+column];
+            const card = ground.find(
+              (card) =>
+                card.type === type &&
+                card.number === +number &&
+                card.column === +column
+            );
+            const selected = ground.slice(ground.indexOf(card));
+            const els = [
+              ...target.parentElement.querySelectorAll<HTMLDivElement>(".card"),
+            ];
+
+            els.forEach((cardEl, order) => {
+              if (order >= els.indexOf(target)) {
+                cardEl.classList.add("selected");
+              }
+            });
+            selected.forEach((item) => {
+              item.selected = true;
+            });
+
+            selector[0] = [card];
+          }
+        } else {
+          this.pointerTimeout = undefined;
+          this.dragging = null;
+        }
+      }, 200);
+    }
+  }
+
+  handlePointerUp(e: PointerEvent) {
+    clearTimeout(this.pointerTimeout);
+    const target = e.target as HTMLDivElement;
+    if (!target) return;
+
+    const emptyEl = target.closest(".empty");
+    const isGroundEl = target.parentElement.parentElement.id === "ground";
+    const isTemporary = target.closest("#temporary-deck");
+    const isTemporaryEmpty = this.solitaire.temporary.length === 0;
+    const selector = this.solitaire.selector;
+    const testModeWithoutKing = this.solitaire.mode === "development";
+
+    /* king on empty place logic */
+    if (
+      isGroundEl &&
+      emptyEl &&
+      !isTemporary &&
+      selector[0] !== null &&
+      (testModeWithoutKing || selector[0][0].number === 13)
+    ) {
+      const column = target.parentElement as HTMLDivElement;
+      const ground = column.parentElement as HTMLDivElement;
+      const index = [...ground.children].findIndex((child) => child === column);
+      // console.log(this.logger.log);
+      this.logger.log("good");
+      this.solitaire.countUpMove();
+      this.solitaire.moveToColumn(selector[0], index);
+      this.renderer.update();
+      this.renderer.soundPick();
+    } else if (
+      emptyEl &&
+      !isTemporary &&
+      selector[0] !== null &&
+      (testModeWithoutKing || selector[0][0].number !== 13)
+    ) {
+      this.logger.log("bad");
+    } else if (isTemporary && selector[0] !== null && isTemporaryEmpty) {
+      const pick = target.parentElement as HTMLDivElement;
+      const temporary = pick.parentElement as HTMLDivElement;
+      // const index = [...temporary.children].findIndex(
+      //   (child) => child === pick
+      // );
+      // console.log(temporary,index)
+      this.logger.log("temp good");
+      this.solitaire.countUpMove();
+      this.solitaire.stageToTemporary(selector[0]);
+      this.renderer.soundPick();
+
+      this.solitaire.clearSelector();
+      // this.solitaire.countUpScore();
+      this.renderer.update();
+    } else if (isTemporary && selector[0] !== null && !isTemporaryEmpty) {
+      this.logger.log("bad");
+    }
+
+    // const column = this.dragging.dataset.cardColumn;
+    // const number = this.dragging.dataset.cardNumber;
+    // const type = this.dragging.dataset.cardType;
+    // const ground = this.solitaire.ground[+column];
+    // const card = ground.find(
+    //   (card) =>
+    //     card.type === type && card.number === +number && card.column === +column
+    // );
+    // const selected = ground.slice(ground.indexOf(card));
+    // const els = [
+    //   ...this.dragging.parentElement.querySelectorAll<HTMLDivElement>(".card"),
+    // ];
+
+    // els.forEach((cardEl, order) => {
+    //   if (order >= els.indexOf(target)) {
+    //     cardEl.classList.remove("selected");
+    //   }
+    // });
+    // selected.forEach((item) => {
+    //   item.selected = false;
+    // });
+
+    this.startDrag = false;
+    if (this.dragging) {
+      this.dragging.style.pointerEvents = "";
+      this.dragging.style.position = "absolute";
+      this.dragging.style.left = this.beforePosition.left;
+      this.dragging.style.top = this.beforePosition.top;
+      this.dragging.style.cursor = "";
+    }
+    this.beforePosition.left = null;
+    this.beforePosition.top = null;
+    this.dragging = null;
+    this.dragX = null;
+    this.dragY = null;
+    this.renderer.update();
+  }
+
+  handlePointerMove(e: PointerEvent) {
+    const target = e.target as HTMLDivElement;
+
+    // TODO: 마우스 떼고 드래깅 구현해야함.
+    // 드래깅 시 스타일 지정에 버그가 있음.
+    if (this.dragging) {
+      const posX = this.dragX - e.clientX;
+      const posY = this.dragY - e.clientY;
+
+      this.dragX = e.clientX;
+      this.dragY = e.clientY;
+
+      this.dragging.style.left = this.dragging.offsetLeft - posX + "px";
+      this.dragging.style.top = this.dragging.offsetTop - posY + "px";
+      this.dragging.style.cursor = "grabbing";
+
+      const elements = [
+        ...this.dragging.parentElement.querySelectorAll<HTMLDivElement>(
+          ".card"
+        ),
+      ];
+      const index = elements.indexOf(this.dragging);
+      const selected = elements.slice(index + 1);
+      selected.forEach((el, order) => {
+        el.style.top =
+          this.dragging.offsetTop -
+          posY +
+          (isDesktop() ? (order + 1) * 22 : (order + 1) * 15) +
+          "px";
+        el.style.left = this.dragging.offsetLeft - posX + "px";
+      });
+    }
   }
 
   handleTabout(e: Event) {
@@ -74,6 +286,15 @@ export default class EventManager {
   }
 
   removeAllListeners() {
+    // window.removeEventListener(
+    //   "pointerdown",
+    //   this.handlePointerDown.bind(this)
+    // );
+    // window.removeEventListener(
+    //   "pointermove",
+    //   this.handlePointerMove.bind(this)
+    // );
+    // window.removeEventListener("pointerup", this.handlePointerUp.bind(this));
     window.removeEventListener("click", this.handleAutoComplete.bind(this));
     window.removeEventListener("click", this.handleSelectCard.bind(this));
     window.removeEventListener("click", this.handleDeckToPick.bind(this));
@@ -103,7 +324,11 @@ export default class EventManager {
     this.renderer.auto_complete = false;
     target.remove();
 
-    function autoComplete() {
+    function sleep(value: number) {
+      return new Promise((resolve) => setTimeout(resolve, value));
+    }
+
+    async function autoComplete() {
       const filtered = self.solitaire.ground.filter((column) => column.length);
       for (let i = 0; i < filtered.length; i++) {
         const column = filtered[i];
@@ -134,9 +359,8 @@ export default class EventManager {
       }
 
       if (filtered.some((column) => column.length > 0)) {
-        setTimeout(() => {
-          autoComplete();
-        }, 100);
+        await sleep(150);
+        autoComplete();
       } else {
         self.renderer.active_auto_complete = false;
         self.renderer.auto_complete = false;
@@ -214,7 +438,7 @@ export default class EventManager {
 
     if (target) {
       const emptyEl = target.closest(".empty");
-      const isGroundEl = target.parentElement.parentElement.id === "ground";
+      const isGroundEl = target.parentElement?.parentElement.id === "ground";
       const isTemporary = target.closest("#temporary-deck");
       const isTemporaryEmpty = this.solitaire.temporary.length === 0;
       const selector = this.solitaire.selector;
@@ -368,6 +592,12 @@ export default class EventManager {
       } else {
         this.solitaire.clearSelector();
       }
+    }
+
+    if (this.dragging) {
+      /* dragging initialize */
+      this.dragging = null;
+      this.startDrag = false;
     }
   }
 }

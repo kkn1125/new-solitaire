@@ -48,3 +48,5 @@ export const formatFromCountdown = (countdown: number) => {
     .padStart(2, "0")}`;
   // .${milliSecond.toString().padStart(2, "0")}
 };
+
+export const isDesktop = () => innerWidth > 768;
